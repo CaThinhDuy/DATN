@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/widgets/Search_Widget.dart';
 import 'package:flutter_application_1/client/widgets/button_custom.dart';
+import 'package:flutter_application_1/client/widgets/page_view_slider.dart';
+
+import 'package:flutter_application_1/client/widgets/widgets_slider_js.dart';
 
 // Define the Product class
 class Product {
@@ -26,7 +30,7 @@ class ProductDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.name),
+        title: SearchWidget(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -57,6 +61,7 @@ class ProductDetailScreen extends StatelessWidget {
               onPressed: () {
                 //xu ly chuyen trang thanh toan
               },
+              icon: Icons.shopping_cart_rounded,
             ),
             SizedBox(height: 8),
             ContainerButton(
@@ -64,6 +69,7 @@ class ProductDetailScreen extends StatelessWidget {
               onPressed: () {
                 //xu ly chuyen trang gio hang
               },
+              icon: Icons.add_shopping_cart_sharp,
             ),
             SizedBox(height: 16),
             Padding(
@@ -76,6 +82,7 @@ class ProductDetailScreen extends StatelessWidget {
           ],
         ),
       ),
+      // bottomSheet: NavBar(),
     );
   }
 }
