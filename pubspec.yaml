@@ -1,0 +1,34 @@
+name: flutter_application_1
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+  - assets/1.jpg
+  - assets/2.jpg
+  - assets/3.webp
+  - assets/4.webp
+  - assets/5.webp
+  - assets/6.webp
+  - assets/b1.png
+  - assets/b2.png
+  - assets/b3.png
+  - assets/logo2.png
+  - assets/products.json
+  - assets/c1.jpg
+  - assets/bp1.png
+
