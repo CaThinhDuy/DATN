@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/widgets/Search_Widget.dart';
 import 'package:flutter_application_1/client/widgets/button_custom.dart';
@@ -9,12 +11,19 @@ class Product {
   final double price;
   final String description;
 
-  Product({
-    required this.name,
-    required this.imageUrl,
-    required this.price,
-    required this.description,
-  });
+  Product(
+      {required this.name,
+      required this.imageUrl,
+      required this.price,
+      required this.description});
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+        name: json['name'],
+        imageUrl: json['imageUrl'],
+        price: json['price'].toDouble(),
+        description: json['description']);
+  }
 }
 
 // Product Detail Screen widget
