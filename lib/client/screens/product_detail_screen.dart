@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/widgets/Search_Widget.dart';
 import 'package:flutter_application_1/client/widgets/button_custom.dart';
+import 'package:flutter_application_1/client/widgets/up_down_widget.dart';
 
 // Define the Product class
 class Product {
@@ -29,7 +30,6 @@ class Product {
 // Product Detail Screen widget
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
-
   ProductDetailScreen({required this.product});
 
   @override
@@ -63,6 +63,8 @@ class ProductDetailScreen extends StatelessWidget {
                 '\$${product.price.toStringAsFixed(2)}',
                 style: const TextStyle(fontSize: 20, color: Colors.red),
               ),
+              SizedBox(height: 8),
+              UpDownWidget(),
               SizedBox(height: 8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
