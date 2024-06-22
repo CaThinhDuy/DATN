@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/widgets/Search_Widget.dart';
 import 'package:flutter_application_1/client/widgets/button_custom.dart';
-import 'package:flutter_application_1/client/widgets/page_view_slider.dart';
-
-import 'package:flutter_application_1/client/widgets/widgets_slider_js.dart';
 
 // Define the Product class
 class Product {
@@ -55,7 +52,7 @@ class ProductDetailScreen extends StatelessWidget {
               SizedBox(height: 8),
               Text(
                 '\$${product.price.toStringAsFixed(2)}',
-                style: TextStyle(fontSize: 20, color: Colors.red),
+                style: const TextStyle(fontSize: 20, color: Colors.red),
               ),
               SizedBox(height: 8),
               Row(
@@ -78,7 +75,7 @@ class ProductDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
