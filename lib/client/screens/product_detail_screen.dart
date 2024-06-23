@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/client/widgets/Search_Widget.dart';
+import 'package:flutter_application_1/client/screens/cart_screen.dart';
+import 'package:flutter_application_1/client/screens/pay_screen.dart';
+import 'package:flutter_application_1/client/widgets/ImageCarousel.dart';
 import 'package:flutter_application_1/client/widgets/button_custom.dart';
 import 'package:flutter_application_1/client/widgets/up_down_widget.dart';
 import '../models/product.dart';
@@ -9,17 +11,42 @@ class ProductDetailScreen extends StatelessWidget {
   final Product product;
   const ProductDetailScreen({super.key, required this.product});
 
+  void _navigateToPay(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PayScreen()),
+    );
+  }
+
+  void _navigateToCart(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CartScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color.fromARGB(255, 255, 92, 52),
         title: Text(
           product.name,
-          style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.w100),
+          style: const TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _navigateToCart(context);
+              },
+              icon: const Icon(
+                Icons.shopping_cart,
+                color: Colors.white,
+                size: 25,
+              ))
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -27,14 +54,14 @@ class ProductDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Image.network(
-                  product.imageUrl,
-                  fit: BoxFit.contain,
-                  height: 200,
-                  width: double.infinity,
-                ),
-              ),
+              Center(child: ImageCarousel()
+                  // Image.network(
+                  //   product.imageUrl,
+                  //   fit: BoxFit.contain,
+                  //   height: 200,
+                  //   width: double.infinity,
+                  // ),
+                  ),
               const SizedBox(height: 16),
               Text(
                 product.name,
@@ -49,28 +76,24 @@ class ProductDetailScreen extends StatelessWidget {
               const SizedBox(height: 8),
               const UpDownWidget(),
               const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ContainerButton(
-                    label: 'Mua ngay',
-                    onPressed: () {
-                      //xu ly chuyen trang thanh toan
-                    },
-                    icon: Icons.attach_money_outlined,
-                  ),
-                  ContainerButton(
-                    label: 'Thêm vào giỏ',
-                    onPressed: () {
-                      //xu ly chuyen trang gio hang
-                    },
-                    icon: Icons.add_shopping_cart_sharp,
-                  ),
-                ],
+              ContainerButton(
+                label: 'Mua ngay ',
+                onPressed: () {
+                  _navigateToPay(context);
+                },
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              ContainerButton(
+                label: 'Thêm vào giỏ hàng',
+                onPressed: () {
+                  _navigateToCart(context);
+                },
+                icon: Icons.add_shopping_cart_sharp,
               ),
               const SizedBox(height: 16),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Thông tin sản phẩm',

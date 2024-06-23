@@ -108,7 +108,7 @@ class _ProductItem extends StatelessWidget {
                 topLeft: Radius.circular(8.0),
                 topRight: Radius.circular(8.0),
               ),
-              child: Image.asset(
+              child: Image.network(
                 product.imageUrl,
                 fit: BoxFit.cover,
               ),

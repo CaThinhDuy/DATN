@@ -4,7 +4,6 @@ import '../screens/notification_list.dart';
 import '../screens/profile.dart';
 import '../screens/trang_chu.dart';
 
-
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
 
@@ -17,8 +16,8 @@ class _NavBarState extends State<NavBar> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
-    const NotificationPage(),
-    const ProfilePage(),
+    const NotificationScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

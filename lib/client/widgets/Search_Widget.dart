@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/screens/cart_screen.dart';
 
 class SearchWidget extends StatelessWidget {
   const SearchWidget({super.key});
+
+  void _navigateToCart(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CartScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +22,14 @@ class SearchWidget extends StatelessWidget {
             Icons.search,
             color: Colors.white,
           ),
-          const SizedBox(width: 8), // Khoảng cách giữa icon search và text field
+          const SizedBox(
+              width: 8), // Khoảng cách giữa icon search và text field
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Search...',
+                  hintText: 'Tìm kiếm...',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: BorderSide.none,
@@ -34,9 +43,14 @@ class SearchWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8), // Khoảng cách giữa text field và icon cart
-          const Icon(
-            Icons.shopping_cart,
-            color: Colors.white,
+          IconButton(
+            icon: const Icon(
+              Icons.shopping_cart,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              _navigateToCart(context);
+            },
           ),
         ],
       ),

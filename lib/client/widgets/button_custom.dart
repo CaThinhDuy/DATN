@@ -17,20 +17,22 @@ class ContainerButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: MediaQuery.sizeOf(context).width * 0.45,
+        width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 255, 92, 52),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[
               Icon(
                 icon,
                 color: Colors.white,
+                size: 25,
               ),
               const SizedBox(width: 8), // Khoảng cách giữa icon và label
             ],
@@ -38,7 +40,7 @@ class ContainerButton extends StatelessWidget {
               label,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 14,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
