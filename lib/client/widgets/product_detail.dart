@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../models/product.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
 
-  ProductDetailPage({required this.product});
+  const ProductDetailPage({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class ProductDetailPage extends StatelessWidget {
         title: Text(product.name),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -22,25 +23,25 @@ class ProductDetailPage extends StatelessWidget {
               height: 300,
               fit: BoxFit.cover,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
               product.name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               'Price: \$${product.price.toStringAsFixed(2)}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18.0,
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
               product.description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16.0,
               ),
             ),
@@ -49,18 +50,4 @@ class ProductDetailPage extends StatelessWidget {
       ),
     );
   }
-}
-
-class Product {
-  final String name;
-  final String imageUrl;
-  final double price;
-  final String description;
-
-  Product({
-    required this.name,
-    required this.imageUrl,
-    required this.price,
-    required this.description,
-  });
 }

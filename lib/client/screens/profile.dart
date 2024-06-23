@@ -1,132 +1,262 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_application_1/client/screens/edit_profile_screen.dart';
+import 'package:flutter_application_1/client/screens/orders_screen.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Map<String, dynamic>? _profileData;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    try {
+      String data = await rootBundle.loadString('assets/profile.json');
+      setState(() {
+        _profileData = jsonDecode(data);
+      });
+    } catch (e) {
+      print('Error loading profile data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            // Image.asset(
-            //   'assets/logo.png',
-            //   height: 32,
-            // ),
-            SizedBox(width: 8),
-            Text(
-              'Profile',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ],
+        title: const Text(
+          'Thông tin cá nhân',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
-        backgroundColor: Color(0xFFee4d2d),
+        backgroundColor: const Color.fromARGB(255, 255, 92, 52),
       ),
-      backgroundColor: Color(0xFFf5f5f5),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
+      backgroundColor: const Color(0xFFf5f5f5),
+      body: _profileData == null
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(
-                      'https://via.placeholder.com/150',
+                  Center(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(
+                            _profileData!['Profile'][0]['imageUrl'],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _profileData!['Profile'][0]['fullname'],
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 2, color: Colors.black),
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Icon(
+                                      Icons.phone,
+                                      color: Color.fromARGB(255, 255, 92, 52),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      _profileData!['Profile'][0]['phone'],
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Icon(
+                                      Icons.mail,
+                                      color: Color.fromARGB(255, 255, 92, 52),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      _profileData!['Profile'][0]['email'],
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Icon(
+                                      Icons.location_on_outlined,
+                                      color: Color.fromARGB(255, 255, 92, 52),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      _profileData!['Profile'][0]['address'],
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 16),
-                  Text(
-                    'John Doe',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                  const SizedBox(height: 32),
+                  Card(
+                    color: Colors.white,
+                    elevation: 4,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: const Icon(
+                            Icons.edit,
+                            color: Color(0xFFee4d2d),
+                          ),
+                          title: const Text(
+                            'Chỉnh sửa',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onTap: () {
+                            _navigateToEditProfile(context);
+                          },
+                          selectedColor: Colors.white,
+                          selectedTileColor: const Color(0xFFee4d2d),
+                        ),
+                        ListTile(
+                          leading: const Icon(
+                            Icons.shopping_cart,
+                            color: Color(0xFFee4d2d),
+                          ),
+                          title: const Text(
+                            'Đơn hàng',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onTap: () {
+                            _navigateToOrders(context);
+                          },
+                          selectedColor: Colors.white,
+                          selectedTileColor: const Color(0xFFee4d2d),
+                        ),
+                        ListTile(
+                          leading: const Icon(
+                            Icons.logout,
+                            color: Color(0xFFee4d2d),
+                          ),
+                          title: const Text(
+                            'Đăng xuất',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onTap: () {
+                            _performLogout(context);
+                          },
+                          selectedColor: Colors.white,
+                          selectedTileColor: const Color(0xFFee4d2d),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 32),
-            Card(
-              color: Colors.white,
-              elevation: 4,
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: Icon(
-                      Icons.edit,
-                      color: Color(0xFFee4d2d),
-                    ),
-                    title: Text(
-                      'Edit Profile',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // Navigate to edit profile page
-                      _navigateToEditProfile(context);
-                    },
-                    selectedColor: Colors.white,
-                    selectedTileColor: Color(0xFFee4d2d),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.shopping_cart,
-                      color: Color(0xFFee4d2d),
-                    ),
-                    title: Text(
-                      'Orders',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // Navigate to orders page
-                      _navigateToOrders(context);
-                    },
-                    selectedColor: Colors.white,
-                    selectedTileColor: Color(0xFFee4d2d),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.logout,
-                      color: Color(0xFFee4d2d),
-                    ),
-                    title: Text(
-                      'Logout',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // Implement logout functionality
-                      _performLogout(context);
-                    },
-                    selectedColor: Colors.white,
-                    selectedTileColor: Color(0xFFee4d2d),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   void _navigateToEditProfile(BuildContext context) {
-    // Implement navigation to edit profile page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => EditProfileScreen()),
+    );
   }
 
   void _navigateToOrders(BuildContext context) {
-    // Implement navigation to orders page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const OrdersScreen()),
+    );
   }
 
   void _performLogout(BuildContext context) {
-    // Implement logout functionality
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Đăng xuất'),
+          content: const Text('Bạn có chắc chắn muốn đăng xuất?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Hủy'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Đăng xuất'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                // Thêm logic đăng xuất tại đây
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ProductCategory extends StatelessWidget {
+  const ProductCategory({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -51,14 +53,14 @@ class _ProductItem extends StatelessWidget {
   final IconData icon;
   final String title;
 
-  _ProductItem({
+  const _ProductItem({
     required this.icon,
     required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 100,
       child: Column(
         children: [
@@ -67,16 +69,16 @@ class _ProductItem extends StatelessWidget {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(8.0),
             ),
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Icon(
               icon,
               size: 32.0,
             ),
           ),
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14.0,
             ),
             textAlign: TextAlign.center,
