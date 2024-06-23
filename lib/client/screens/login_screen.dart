@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +35,7 @@ class LoginScreen extends StatelessWidget {
                 cacheWidth: 180,
               ),
               const SizedBox(height: 16.0),
-              LoginForm(),
+              const LoginForm(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
                 child: Container(
@@ -72,6 +72,8 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
@@ -170,7 +172,7 @@ class _LoginFormState extends State<LoginForm> {
           width: MediaQuery.sizeOf(context).width * 0.8,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black, width: 2),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),

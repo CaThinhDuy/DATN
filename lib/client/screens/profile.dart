@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           children: [
             // Image.asset(
             //   'assets/logo.png',
@@ -20,15 +22,15 @@ class ProfilePage extends StatelessWidget {
             ),
           ],
         ),
-        backgroundColor: Color(0xFFee4d2d),
+        backgroundColor: const Color(0xFFee4d2d),
       ),
-      backgroundColor: Color(0xFFf5f5f5),
+      backgroundColor: const Color(0xFFf5f5f5),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
+            const Center(
               child: Column(
                 children: [
                   CircleAvatar(
@@ -49,18 +51,18 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Card(
               color: Colors.white,
               elevation: 4,
               child: Column(
                 children: [
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.edit,
                       color: Color(0xFFee4d2d),
                     ),
-                    title: Text(
+                    title: const Text(
                       'Edit Profile',
                       style: TextStyle(
                         color: Colors.black,
@@ -71,14 +73,14 @@ class ProfilePage extends StatelessWidget {
                       _navigateToEditProfile(context);
                     },
                     selectedColor: Colors.white,
-                    selectedTileColor: Color(0xFFee4d2d),
+                    selectedTileColor: const Color(0xFFee4d2d),
                   ),
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.shopping_cart,
                       color: Color(0xFFee4d2d),
                     ),
-                    title: Text(
+                    title: const Text(
                       'Orders',
                       style: TextStyle(
                         color: Colors.black,
@@ -89,14 +91,14 @@ class ProfilePage extends StatelessWidget {
                       _navigateToOrders(context);
                     },
                     selectedColor: Colors.white,
-                    selectedTileColor: Color(0xFFee4d2d),
+                    selectedTileColor: const Color(0xFFee4d2d),
                   ),
                   ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.logout,
                       color: Color(0xFFee4d2d),
                     ),
-                    title: Text(
+                    title: const Text(
                       'Logout',
                       style: TextStyle(
                         color: Colors.black,
@@ -107,7 +109,7 @@ class ProfilePage extends StatelessWidget {
                       _performLogout(context);
                     },
                     selectedColor: Colors.white,
-                    selectedTileColor: Color(0xFFee4d2d),
+                    selectedTileColor: const Color(0xFFee4d2d),
                   ),
                 ],
               ),

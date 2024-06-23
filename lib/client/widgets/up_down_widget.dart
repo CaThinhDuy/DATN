@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class UpDownWidget extends StatefulWidget {
+  const UpDownWidget({super.key});
+
   @override
   _UpDownWidgetState createState() => _UpDownWidgetState();
 }
@@ -25,34 +27,35 @@ class _UpDownWidgetState extends State<UpDownWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      height: 40,
+      decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: const Color.fromARGB(255, 255, 92, 52)),
-      padding: EdgeInsets.all(20.0),
+          color: Color.fromARGB(255, 255, 92, 52)),
+      padding: const EdgeInsets.all(1.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.remove,
               size: 25,
               color: Colors.white,
             ),
             onPressed: decrementCounter,
           ),
-          SizedBox(width: 18.0),
+          const SizedBox(width: 18.0),
           Text(
             '$counter',
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 20.0,
                 color: Colors.white,
                 fontWeight: FontWeight.bold),
           ),
-          SizedBox(
+          const SizedBox(
             width: 18.0,
           ),
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.add,
               size: 25,
               color: Colors.white,

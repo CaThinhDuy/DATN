@@ -66,7 +66,7 @@ class _WidgetsViewSliderState extends State<WidgetsViewSlider> {
     return Expanded(
       flex: 2,
       child: _slides.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : PageView(
               controller: _pageController,
               children:

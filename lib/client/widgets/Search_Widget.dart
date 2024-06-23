@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SearchWidget extends StatelessWidget {
+  const SearchWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,7 +14,7 @@ class SearchWidget extends StatelessWidget {
             Icons.search,
             color: Colors.white,
           ),
-          SizedBox(width: 8), // Khoảng cách giữa icon search và text field
+          const SizedBox(width: 8), // Khoảng cách giữa icon search và text field
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -26,12 +28,12 @@ class SearchWidget extends StatelessWidget {
                   fillColor: Colors.grey[200],
                   filled: true,
                   contentPadding:
-                      EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                 ),
               ),
             ),
           ),
-          SizedBox(width: 8), // Khoảng cách giữa text field và icon cart
+          const SizedBox(width: 8), // Khoảng cách giữa text field và icon cart
           const Icon(
             Icons.shopping_cart,
             color: Colors.white,

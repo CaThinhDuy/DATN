@@ -3,52 +3,69 @@
         {
             "name": "Product 1",
             "imageUrl": "c1.jpg",
-            "price": 19.99
+            "price": 19.99,
+            "description":"description sp 01"
         },
         {
             "name": "Product 2",
             "imageUrl": "bp1.png",
-            "price": 24.99
+            "price": 24.99,
+            "description":"description sp 02"
+
         },
         {
             "name": "Product 3",
             "imageUrl": "3.webp",
-            "price": 29.99
+            "price": 27.99,
+            "description":"description sp 03"
         },
         {
-            "name": "Product 4",
-            "imageUrl": "4.jpg",
-            "price": 14.99
+            "name": "Chuột Gaming",
+            "imageUrl": "https://product.hstatic.net/200000722513/product/thumbchuot-recovered_757cce0149c042149f8b58f30fcb3307_8868cbe7339a46e9813f2eb8bdb334ee_grande.png",
+            "price": 3540000,
+            "description": "Kết nối: Có dây / Wireless / Bluetooth\nThời lượng pin: Lên đến 90 giờ (HyperSpeed)\nLed: Razer Chroma RGB\nCảm biến: Quang học Focus Pro 30K\nDPI: 30000\nIPS: 750\nSố nút: 11\nGia tốc tối đa (G): 70\nSwitch: Optical Gen-3\nTuổi thọ Switch: 90 triệu lần nhấp\nFeet chuột: 100% PTFE\nKích thước (Dài x Rộng x Cao): 130 mm x 75.4 mm x 42.5 mm\nTrọng lượng: 112 g"
+
         },
         {
             "name": "Product 5",
             "imageUrl": "5.jpg",
-            "price": 39.99
+            "price": 39.99,
+            "description":"description sp 05"
+
         },
         {
             "name": "Product 6",
             "imageUrl": "6.jpg",
-            "price": 9.99
+            "price": 9.99,
+            "description":"description sp 06"
+
         },
         {
             "name": "Product 7",
             "imageUrl": "7.jpg",
-            "price": 54.99
+            "price": 54.99,
+            "description":"description sp 07"
         },
         {
             "name": "Product 8",
             "imageUrl": "8.jpg",
-            "price": 12.99
+            "price": 12.99,
+            "description":"description sp 08"
+
         },
         {
             "name": "Product 9",
             "imageUrl": "9.jpg",
-            "price": 34.99
+            "price": 34.99,
+            "description":"description sp 09"
+
         },
         {
             "name": "Product 10",
             "imageUrl": "10.jpg",
-            "price": 17.99
+            "price": 17.99,
+            "description":"description sp 10"
+
         }
     ]
 }

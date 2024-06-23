@@ -5,7 +5,8 @@ class ContainerButton extends StatelessWidget {
   final VoidCallback onPressed;
   final IconData? icon; // Thêm tham số icon
 
-  ContainerButton({
+  const ContainerButton({
+    super.key,
     required this.label,
     required this.onPressed,
     this.icon,
@@ -37,7 +38,7 @@ class ContainerButton extends StatelessWidget {
               label,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 10,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
