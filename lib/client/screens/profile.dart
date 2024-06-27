@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/client/screens/edit_profile_screen.dart';
 import 'package:flutter_application_1/client/screens/orders_screen.dart';
+import 'package:flutter_application_1/client/screens/login_screen.dart'; // Thêm import màn hình đăng nhập
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String token;
+
+  const ProfileScreen({Key? key, required this.token}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -31,6 +35,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('authToken');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,10 +49,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 20,
+            fontSize: 30,
           ),
         ),
         backgroundColor: const Color.fromARGB(255, 255, 92, 52),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       backgroundColor: const Color(0xFFf5f5f5),
       body: _profileData == null
@@ -250,8 +260,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TextButton(
               child: const Text('Đăng xuất'),
               onPressed: () {
-                Navigator.of(context).pop();
-                // Thêm logic đăng xuất tại đây
+                _logout().then((_) {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                });
               },
             ),
           ],

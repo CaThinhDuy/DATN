@@ -1,30 +1,77 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+import '../widgets/button_custom.dart';
+
+class RegisterScreen extends StatefulWidget {
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  bool _hiddenPassword = true;
+  bool _loading = false;
+  String? _errorMessage;
+
+  Future<void> _register(BuildContext context) async {
+    setState(() {
+      _loading = true;
+      _errorMessage = null;
+    });
+
+    final String username = _usernameController.text;
+    final String password = _passwordController.text;
+    final String email = _emailController.text;
+    String host = '192.168.1.13'; // Replace with your server IP
+
+    final response = await http.post(
+      Uri.parse('http://${host}:3000/register'), // Replace with your server URL
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+        'password': password,
+        'email': email,
+      }),
+    );
+
+    setState(() {
+      _loading = false;
+    });
+
+    if (response.statusCode == 200) {
+      // Successful registration
+      Navigator.pop(context); // Go back to login screen
+    } else {
+      // Handle error
+      setState(() {
+        _errorMessage = 'Đăng ký không thành công. Vui lòng thử lại.';
+      });
+      print('Register failed, status code: ${response.statusCode}');
+      print('Response: ${response.body}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Đăng  ký',
+          'Đăng ký',
           style: TextStyle(
               color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color.fromARGB(255, 255, 92, 52),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.white,
-          iconSize: 30,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,161 +79,63 @@ class RegisterScreen extends StatelessWidget {
               Image.asset(
                 'assets/logo2.png',
                 cacheHeight: 180,
-                cacheWidth: 180,
+                cacheWidth: 200,
               ),
               const SizedBox(height: 16.0),
-              const RegisterForm(),
+              TextField(
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.account_circle_outlined),
+                  labelText: 'Tên đăng nhập',
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.email),
+                  labelText: 'Email',
+                ),
+              ),
+              const SizedBox(height: 16.0),
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child: Container(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text('Bạn đã có tài khoản? '),
-                      ),
-                      ElevatedButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.blueAccent)),
-                        child: Text(
-                          'Đăng nhập',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      )
-                    ],
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    icon: const Icon(Icons.password),
+                    labelText: 'Mật khẩu',
+                    suffixIcon: IconButton(
+                      icon: Icon(_hiddenPassword
+                          ? Icons.visibility_off
+                          : Icons.visibility),
+                      onPressed: () {
+                        setState(() {
+                          _hiddenPassword = !_hiddenPassword;
+                        });
+                      },
+                    ),
+                  ),
+                  obscureText: _hiddenPassword,
+                ),
+              ),
+              if (_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
+              const SizedBox(height: 16.0),
+              ContainerButton(
+                label: 'Đăng ký',
+                onPressed: _loading ? null : () => _register(context),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
-
-  @override
-  _RegisterFormState createState() => _RegisterFormState();
-}
-
-class _RegisterFormState extends State<RegisterForm> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordController2 = TextEditingController();
-
-  bool hidden = true;
-  bool hidden2 = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TextField(
-          controller: _usernameController,
-          decoration: const InputDecoration(
-            icon: Icon(Icons.account_circle_outlined),
-            labelText: 'Email/Số điện thoại',
-          ),
-        ),
-        const SizedBox(height: 16.0),
-        Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-            child: TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                icon: const Icon(Icons.password),
-                labelText: 'Mật khẩu',
-                suffixIcon: IconButton(
-                  icon: Icon(hidden ? Icons.visibility_off : Icons.visibility),
-                  onPressed: () {
-                    setState(() {
-                      hidden = !hidden;
-                    });
-                  },
-                ),
-              ),
-              obscureText: hidden,
-            )),
-        const SizedBox(height: 16.0),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
-              child: TextField(
-                controller: _passwordController2,
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.password),
-                  labelText: 'Nhập lại mật khẩu',
-                  suffixIcon: IconButton(
-                    icon:
-                        Icon(hidden2 ? Icons.visibility_off : Icons.visibility),
-                    onPressed: () {
-                      setState(() {
-                        hidden2 = !hidden2;
-                      });
-                    },
-                  ),
-                ),
-                obscureText: hidden2,
-              )),
-        ),
-        const SizedBox(height: 16.0),
-        SizedBox(
-          height: MediaQuery.sizeOf(context).height * 0.08,
-          width: MediaQuery.sizeOf(context).width * 0.8,
-          child: const ElevatedButton(
-              style: ButtonStyle(
-                  backgroundColor:
-                      WidgetStatePropertyAll(Color.fromARGB(255, 255, 92, 52))),
-              onPressed: null,
-              child: Text(
-                'ĐĂNG KÝ',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              )),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        Container(
-          alignment: AlignmentDirectional.bottomCenter,
-          height: MediaQuery.sizeOf(context).height * 0.08,
-          width: MediaQuery.sizeOf(context).width * 0.8,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 2),
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Image.asset(
-                  'assets/images/google.png',
-                  cacheHeight: 50,
-                ),
-                const Text(
-                  'Đăng ký với Google',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

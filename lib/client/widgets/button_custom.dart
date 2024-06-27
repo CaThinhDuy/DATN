@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ContainerButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final IconData? icon; // Thêm tham số icon
 
   const ContainerButton({
@@ -21,7 +21,7 @@ class ContainerButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 255, 92, 52),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
