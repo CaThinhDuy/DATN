@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/client/screens/product_detail_screen.dart';
 import '../models/product.dart';
+import '../screens/product_detail_screen.dart';
 
 class ProductList extends StatefulWidget {
   const ProductList({super.key});

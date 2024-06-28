@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screens/login_screen.dart';
 import '../screens/notification_list.dart';
 import '../screens/profile.dart';
+import '../screens/login_screen.dart';
 import '../screens/trang_chu.dart';
 
 class NavBar extends StatefulWidget {
   final String? token;
-
-  const NavBar({Key? key, this.token}) : super(key: key);
+  final int? id;
+  const NavBar({Key? key, this.token, this.id}) : super(key: key);
 
   @override
   _NavBarState createState() => _NavBarState();
@@ -18,6 +18,7 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   int _selectedIndex = 0;
   String? _token;
+  int? _userId; // Thêm biến để lưu ID người dùng
 
   @override
   void initState() {
@@ -29,11 +30,7 @@ class _NavBarState extends State<NavBar> {
     if (widget.token != null) {
       setState(() {
         _token = widget.token;
-      });
-    } else {
-      final prefs = await SharedPreferences.getInstance();
-      setState(() {
-        _token = prefs.getString('authToken');
+        _userId = widget.id;
       });
     }
   }
@@ -41,8 +38,22 @@ class _NavBarState extends State<NavBar> {
   List<Widget> get _widgetOptions => [
         const HomePage(),
         const NotificationScreen(),
-        _token != null ? ProfileScreen(token: _token!) : const LoginScreen(),
+        if (_token != null && _userId != null)
+          ProfileScreen(
+            token: _token!,
+            onLogout: _updateToken,
+            idUser: _userId!, // Chuyển đổi ID người dùng sang String
+          )
+        else
+          const LoginScreen(),
       ];
+
+  void _updateToken() {
+    setState(() {
+      _token = null; // Xóa token khi đăng xuất
+      _selectedIndex = 0; // Điều hướng về màn hình chính khi đăng xuất
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {

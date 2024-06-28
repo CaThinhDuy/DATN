@@ -120,7 +120,7 @@ class _NotificationListState extends State<NotificationScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text(notification['date_post']!.length > 0
+                      Text(notification['date_post']!.isNotEmpty
                           ? '${notification['date_post']}'
                           : '1/1/1900')
                     ],

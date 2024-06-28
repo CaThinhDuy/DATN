@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/client/widgets/button_custom.dart';
-
 import '../models/profile.dart';
+import '../widgets/button_custom.dart';
 
 class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
@@ -37,9 +38,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         future: futureProfile,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Failed to load profile'));
+            return const Center(child: Text('Failed to load profile'));
           } else if (snapshot.hasData) {
             final profile = snapshot.data!;
             fullnameController = TextEditingController(text: profile.fullname);
@@ -63,27 +64,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: fullnameController,
-                    decoration: InputDecoration(labelText: 'Họ tên'),
+                    decoration: const InputDecoration(labelText: 'Họ tên'),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: phoneController,
-                    decoration: InputDecoration(labelText: 'Số điện thoại'),
+                    decoration:
+                        const InputDecoration(labelText: 'Số điện thoại'),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
+                    decoration: const InputDecoration(labelText: 'Email'),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: addressController,
-                    decoration: InputDecoration(labelText: 'Địa chỉ'),
+                    decoration: const InputDecoration(labelText: 'Địa chỉ'),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ContainerButton(
                     label: 'Lưu',
                     onPressed: () {
@@ -94,7 +96,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             );
           } else {
-            return Center(child: Text('No profile data available'));
+            return const Center(child: Text('No profile data available'));
           }
         },
       ),

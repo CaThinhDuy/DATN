@@ -1,43 +1,50 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_application_1/client/screens/edit_profile_screen.dart';
-import 'package:flutter_application_1/client/screens/orders_screen.dart';
-import 'package:flutter_application_1/client/screens/login_screen.dart'; // Thêm import màn hình đăng nhập
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_1/client/models/user_db.dart';
+import '../../server/UserService.dart';
+import 'edit_profile_screen.dart';
+import 'login_screen.dart';
+import 'orders_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String token;
+  final Function() onLogout;
+  final int idUser;
 
-  const ProfileScreen({Key? key, required this.token}) : super(key: key);
+  const ProfileScreen({
+    Key? key,
+    required this.token,
+    required this.onLogout,
+    required this.idUser,
+  }) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Map<String, dynamic>? _profileData;
+  user? _userData;
 
   @override
   void initState() {
     super.initState();
-    _loadProfileData();
+    _loadUserData();
   }
 
-  Future<void> _loadProfileData() async {
+  Future<void> _loadUserData() async {
     try {
-      String data = await rootBundle.loadString('assets/profile.json');
-      setState(() {
-        _profileData = jsonDecode(data);
-      });
+      user? User =
+          await UserService.getUserProfile(widget.token, widget.idUser);
+      if (User != null) {
+        setState(() {
+          _userData = User;
+        });
+      } else {
+        // Handle error or show a message
+      }
     } catch (e) {
-      print('Error loading profile data: $e');
+      // Handle error or show a message
+      print('Error loading user profile: $e');
     }
-  }
-
-  Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('authToken');
   }
 
   @override
@@ -56,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         iconTheme: IconThemeData(color: Colors.white),
       ),
       backgroundColor: const Color(0xFFf5f5f5),
-      body: _profileData == null
+      body: _userData == null
           ? Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
@@ -69,12 +76,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CircleAvatar(
                           radius: 50,
                           backgroundImage: NetworkImage(
-                            _profileData!['Profile'][0]['imageUrl'],
+                            _userData!.avatar!,
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _profileData!['Profile'][0]['fullname'],
+                          ' ${_userData!.lastName}',
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -83,25 +90,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                              border: Border.all(width: 2, color: Colors.black),
-                              borderRadius: BorderRadius.circular(15)),
+                            border: Border.all(width: 2, color: Colors.black),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const Icon(
                                       Icons.phone,
                                       color: Color.fromARGB(255, 255, 92, 52),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      _profileData!['Profile'][0]['phone'],
+                                      _userData!.phone!,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -110,21 +115,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const Icon(
                                       Icons.mail,
                                       color: Color.fromARGB(255, 255, 92, 52),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      _profileData!['Profile'][0]['email'],
+                                      _userData!.email!,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -133,25 +133,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const Icon(
                                       Icons.location_on_outlined,
                                       color: Color.fromARGB(255, 255, 92, 52),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      _profileData!['Profile'][0]['address'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        _userData!.address1!,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -183,7 +181,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             _navigateToEditProfile(context);
                           },
-                          selectedColor: Colors.white,
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
                         ListTile(
@@ -200,7 +197,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             _navigateToOrders(context);
                           },
-                          selectedColor: Colors.white,
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
                         ListTile(
@@ -217,7 +213,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             _performLogout(context);
                           },
-                          selectedColor: Colors.white,
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
                       ],
@@ -243,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _performLogout(BuildContext context) {
+  Future<void> _performLogout(BuildContext context) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -273,5 +268,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  Future<void> _logout() async {
+    // Perform logout operations here, e.g., clearing tokens, preferences, etc.
+    widget.onLogout(); // Call the onLogout callback to notify the parent widget
   }
 }
