@@ -18,7 +18,7 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   int _selectedIndex = 0;
   String? _token;
-  int? _userId; // Thêm biến để lưu ID người dùng
+  int? _userId;
 
   @override
   void initState() {
@@ -27,12 +27,11 @@ class _NavBarState extends State<NavBar> {
   }
 
   Future<void> _loadToken() async {
-    if (widget.token != null) {
-      setState(() {
-        _token = widget.token;
-        _userId = widget.id;
-      });
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _token = widget.token ?? prefs.getString('token');
+      _userId = widget.id ?? prefs.getInt('id');
+    });
   }
 
   List<Widget> get _widgetOptions => [
@@ -42,16 +41,20 @@ class _NavBarState extends State<NavBar> {
           ProfileScreen(
             token: _token!,
             onLogout: _updateToken,
-            idUser: _userId!, // Chuyển đổi ID người dùng sang String
+            idUser: _userId!,
           )
         else
           const LoginScreen(),
       ];
 
-  void _updateToken() {
+  void _updateToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('id');
     setState(() {
-      _token = null; // Xóa token khi đăng xuất
-      _selectedIndex = 0; // Điều hướng về màn hình chính khi đăng xuất
+      _token = null;
+      _userId = null;
+      _selectedIndex = 0;
     });
   }
 

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_application_1/utils/api.dart';
 import 'package:http/http.dart' as http;
 
-const String BaseUrl = Api.Url;
+const String BaseUrl = Api.userServiceUrl;
 
 class RegisterService {
   static Future<bool> register(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/widgets/CustomTextField.dart';
 import 'package:flutter_application_1/client/widgets/error_message.dart';
+import '../screens/ForgotPasswordScreen.dart';
 import '../widgets/button_custom.dart';
 import '../screens/register_screen.dart'; // Import RegisterScreen
 // Import NavBar
@@ -82,7 +83,11 @@ class LoginForm extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    // TODO: Implement forgot password logic
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForgetPasswordScreen()),
+                    );
                   },
                   child: const Text(
                     'quên mật khẩu?',

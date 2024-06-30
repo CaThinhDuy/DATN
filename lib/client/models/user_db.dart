@@ -1,4 +1,6 @@
-class user {
+import 'package:flutter_application_1/server/UserService.dart';
+
+class User {
   int? id;
   String? avatar;
   String? userName;
@@ -13,7 +15,7 @@ class user {
   String? address2;
   int? status;
 
-  user(
+  User(
       {this.id,
       this.avatar,
       this.userName,
@@ -28,7 +30,7 @@ class user {
       this.address2,
       this.status});
 
-  user.fromJson(Map<String, dynamic> json) {
+  User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     avatar = json['avatar'];
     userName = json['user_name'];

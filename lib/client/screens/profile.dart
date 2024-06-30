@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/models/user_db.dart';
+import 'package:flutter_application_1/client/widgets/nav.dart';
 import '../../server/UserService.dart';
 import 'edit_profile_screen.dart';
 import 'login_screen.dart';
@@ -22,7 +23,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  user? _userData;
+  User? _userData;
 
   @override
   void initState() {
@@ -32,18 +33,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUserData() async {
     try {
-      user? User =
+      User? user =
           await UserService.getUserProfile(widget.token, widget.idUser);
-      if (User != null) {
+      if (user != null) {
         setState(() {
-          _userData = User;
+          _userData = user;
         });
       } else {
-        // Handle error or show a message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Không tìm thấy thông tin người dùng'),
+          ),
+        );
       }
     } catch (e) {
-      // Handle error or show a message
-      print('Error loading user profile: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đã xảy ra lỗi khi tải dữ liệu người dùng'),
+        ),
+      );
+      print('Lỗi lấy dữ liệu: $e');
     }
   }
 
@@ -76,7 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CircleAvatar(
                           radius: 50,
                           backgroundImage: NetworkImage(
-                            _userData!.avatar!,
+                            _userData!.avatar ??
+                                ('https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png'),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -179,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           onTap: () {
-                            _navigateToEditProfile(context);
+                            _navigateToEditProfile();
                           },
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
@@ -224,11 +234,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _navigateToEditProfile(BuildContext context) {
-    Navigator.push(
+  void _navigateToEditProfile() async {
+    final updatedUser = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EditProfileScreen()),
+      MaterialPageRoute(
+        builder: (context) => EditProfileScreen(
+          token: widget.token,
+          id: widget.idUser,
+        ),
+      ),
     );
+
+    if (updatedUser != null) {
+      setState(() {
+        _userData = updatedUser;
+      });
+    }
   }
 
   void _navigateToOrders(BuildContext context) {
@@ -259,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.of(context).pop();
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => const NavBar()),
                   );
                 });
               },
@@ -271,7 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _logout() async {
-    // Perform logout operations here, e.g., clearing tokens, preferences, etc.
-    widget.onLogout(); // Call the onLogout callback to notify the parent widget
+    // Thực hiện các thao tác đăng xuất ở đây, ví dụ như xóa token, dữ liệu đăng nhập, v.v.
+    widget.onLogout(); // Gọi callback onLogout để thông báo cho widget cha
   }
 }

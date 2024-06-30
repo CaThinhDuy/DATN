@@ -23,7 +23,7 @@ class AuthService {
 
     final String username = usernameController.text;
     final String password = passwordController.text;
-    const String BaseUrl = Api.Url;
+    const String BaseUrl = Api.userServiceUrl;
     final response = await http.post(
       Uri.parse('$BaseUrl/login'), // Replace with your server URL
       headers: <String, String>{
@@ -34,6 +34,7 @@ class AuthService {
         'password': password,
       }),
     );
+    print(BaseUrl);
 
     setLoading(false);
 
@@ -41,7 +42,7 @@ class AuthService {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
       final String token = responseBody['token'];
       final int id = responseBody['id'];
-
+      print(response.body);
       // Save token into SharedPreferences
       await saveToken(token);
 
