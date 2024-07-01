@@ -2,53 +2,70 @@
     "products": [
         {
             "name": "Product 1",
-            "imageUrl": "c1.jpg",
-            "price": 19.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/kg270_m5_01_wp_ksp_eb42565fe77d49a5bca05b233e719f27_1024x1024_1a04284f5ae24458a5ab2f6135f76a38_1024x1024.jpg",
+            "price": 19.99,
+            "description":"description sp 01"
         },
         {
             "name": "Product 2",
-            "imageUrl": "bp1.png",
-            "price": 24.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/5075b_black_6b7d2865194f4230bdd1ea2bddcf0e00_1024x1024.png",
+            "price": 24.99,
+            "description":"description sp 02"
+
         },
         {
             "name": "Product 3",
-            "imageUrl": "3.webp",
-            "price": 29.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/akko-5075b-plus-s-black-silver-02_0fe222f663ef42d6a8fb78b1f8ca874d_1024x1024.jpg",
+            "price": 27.99,
+            "description":"description sp 03"
         },
         {
-            "name": "Product 4",
-            "imageUrl": "4.jpg",
-            "price": 14.99
+            "name": "Chuột Gaming",
+            "imageUrl": "https://product.hstatic.net/200000722513/product/thumbchuot-recovered_757cce0149c042149f8b58f30fcb3307_8868cbe7339a46e9813f2eb8bdb334ee_grande.png",
+            "price": 3540000,
+            "description": "Kết nối: Có dây / Wireless / Bluetooth\nThời lượng pin: Lên đến 90 giờ (HyperSpeed)\nLed: Razer Chroma RGB\nCảm biến: Quang học Focus Pro 30K\nDPI: 30000\nIPS: 750\nSố nút: 11\nGia tốc tối đa (G): 70\nSwitch: Optical Gen-3\nTuổi thọ Switch: 90 triệu lần nhấp\nFeet chuột: 100% PTFE\nKích thước (Dài x Rộng x Cao): 130 mm x 75.4 mm x 42.5 mm\nTrọng lượng: 112 g"
+
         },
         {
             "name": "Product 5",
-            "imageUrl": "5.jpg",
-            "price": 39.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/3098rf_dracula_ac594319c99e41908192822be59e8f96_1024x1024.png",
+            "price": 39.99,
+            "description":"description sp 05"
+
         },
         {
             "name": "Product 6",
-            "imageUrl": "6.jpg",
-            "price": 9.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/ban-phim-co-akko-3108-rf-world-tour-tokyo-01_f66b333528d44f3c87bbf649cdf39e6c_1024x1024.jpg",
+            "price": 9.99,
+            "description":"description sp 06"
+
         },
         {
             "name": "Product 7",
-            "imageUrl": "7.jpg",
-            "price": 54.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/ban-phim-co-akko-mod007v3-he-year-of-dragon__1__e06cec66dd14449e8e1eaa15988dcf14_1024x1024.jpg",
+            "price": 54.99,
+            "description":"description sp 07"
         },
         {
             "name": "Product 8",
-            "imageUrl": "8.jpg",
-            "price": 12.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/5075b_white_3db02005f1c64848be25c0caad384536_1024x1024.png",
+            "price": 12.99,
+            "description":"description sp 08"
+
         },
         {
             "name": "Product 9",
-            "imageUrl": "9.jpg",
-            "price": 34.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/thumbphim-recovered-recovered_267e97e1955a416ebc59d2aabcdf227e_943e2216bceb4b11904c6249de9c260a_1024x1024.gif",
+            "price": 34.99,
+            "description":"description sp 09"
+
         },
         {
             "name": "Product 10",
-            "imageUrl": "10.jpg",
-            "price": 17.99
+            "imageUrl": "https://product.hstatic.net/200000722513/product/1nohih66_d01c566df941499ba74e41d07a77e3bb_1024x1024.png",
+            "price": 17.99,
+            "description":"description sp 10"
+
         }
     ]
 }

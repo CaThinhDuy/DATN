@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/widgets/Search_Widget.dart';
 
 import '../widgets/page_view_slider.dart';
 import '../widgets/product_cate.dart';
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFee4d2d),
+        backgroundColor: const Color.fromARGB(255, 255, 92, 52),
         title: Row(
           children: [
             // Image.asset(
@@ -27,37 +28,18 @@ class _HomePageState extends State<HomePage> {
             // SizedBox(width: 20.0),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                      hintText: 'Tìm kiếm',
-                      border: InputBorder.none,
-                      prefixIcon: Container(
-                        decoration: BoxDecoration(
-                            color: Color(0xFFee4d2d),
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                      )),
-                ),
-              ),
-            ),
-            SizedBox(width: 16.0),
-            Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: SearchWidget()),
             ),
           ],
         ),
       ),
-      body: Column(
+      body: const Column(
         children: [
-          const PageViewSlider(),
+          PageViewSlider(),
           ProductCategory(),
           Expanded(
             flex: 3,
