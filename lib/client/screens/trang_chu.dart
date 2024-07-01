@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/client/widgets/Search_Widget.dart';
-
+import '../widgets/Search_Widget.dart';
 import '../widgets/page_view_slider.dart';
 import '../widgets/product_cate.dart';
 import '../widgets/product_list.dart';
@@ -32,7 +31,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: SearchWidget()),
+                  child: const SearchWidget()),
             ),
           ],
         ),

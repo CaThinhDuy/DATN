@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/client/screens/cart_screen.dart';
+
+import '../screens/cart_screen.dart';
 
 class SearchWidget extends StatelessWidget {
   const SearchWidget({super.key});

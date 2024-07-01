@@ -88,7 +88,7 @@ class _NotificationListState extends State<NotificationScreen> {
         title: const Text(
           'Thông báo ',
           style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+              fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: const Color.fromARGB(255, 255, 92, 52),
@@ -120,7 +120,7 @@ class _NotificationListState extends State<NotificationScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Text(notification['date_post']!.length > 0
+                      Text(notification['date_post']!.isNotEmpty
                           ? '${notification['date_post']}'
                           : '1/1/1900')
                     ],

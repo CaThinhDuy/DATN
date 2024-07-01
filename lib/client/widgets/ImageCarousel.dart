@@ -3,6 +3,8 @@ import '../models/image_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class ImageCarousel extends StatefulWidget {
+  const ImageCarousel({super.key});
+
   @override
   _ImageCarouselState createState() => _ImageCarouselState();
 }
@@ -22,11 +24,11 @@ class _ImageCarouselState extends State<ImageCarousel> {
       future: futureImages,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Failed to load images'));
+          return const Center(child: Text('Failed to load images'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No images available'));
+          return const Center(child: Text('No images available'));
         } else {
           return CarouselSlider(
             options: CarouselOptions(
@@ -36,16 +38,16 @@ class _ImageCarouselState extends State<ImageCarousel> {
               aspectRatio: 16 / 9,
               autoPlayCurve: Curves.fastOutSlowIn,
               enableInfiniteScroll: true,
-              autoPlayAnimationDuration: Duration(milliseconds: 800),
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
               viewportFraction: 0.8,
             ),
             items: snapshot.data!.map((image) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
-                    margin: EdgeInsets.all(5.0),
+                    margin: const EdgeInsets.all(5.0),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                       child: Stack(
                         children: <Widget>[
                           Image.network(image.url,
@@ -55,7 +57,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
                             left: 0.0,
                             right: 0.0,
                             child: Container(
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
                                     Color.fromARGB(200, 0, 0, 0),
