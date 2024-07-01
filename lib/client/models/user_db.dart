@@ -1,5 +1,3 @@
-import 'package:flutter_application_1/server/UserService.dart';
-
 class User {
   int? id;
   String? avatar;

@@ -1,6 +1,7 @@
 // lib/widgets/register_form.dart
 import 'package:flutter/material.dart';
-import '../../server/register_service.dart';
+import 'package:flutter_application_1/server/UserService.dart';
+
 import 'CustomTextField.dart';
 import 'error_message.dart';
 import 'button_custom.dart';
@@ -30,7 +31,7 @@ class _RegisterFormState extends State<RegisterForm> {
     final String password = _passwordController.text;
     final String email = _emailController.text;
 
-    final success = await RegisterService.register(username, password, email);
+    final success = await UserService.register(username, password, email);
 
     setState(() {
       _loading = false;
