@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/client/widgets/button_custom.dart';
-
-import '../models/profile.dart';
+import 'package:flutter_application_1/client/models/user_db.dart';
+import '../../server/UserService.dart';
+import '../widgets/button_custom.dart';
+// Import màn hình hồ sơ
 
 class EditProfileScreen extends StatefulWidget {
+  final String token;
+  final int id;
+  const EditProfileScreen({super.key, required this.token, required this.id});
+
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  late Future<Profile> futureProfile;
-  late TextEditingController fullnameController;
+  late Future<User?> futureProfile;
+  late TextEditingController lastNameController;
+  late TextEditingController firstNameController;
   late TextEditingController phoneController;
   late TextEditingController emailController;
   late TextEditingController addressController;
@@ -19,6 +25,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     futureProfile = fetchProfile();
+  }
+
+  Future<User?> fetchProfile() async {
+    return UserService.getUserProfile(widget.token, widget.id);
   }
 
   @override
@@ -33,19 +43,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         iconTheme: const IconThemeData(color: Colors.white, size: 20),
         backgroundColor: const Color.fromARGB(255, 255, 92, 52),
       ),
-      body: FutureBuilder<Profile>(
+      body: FutureBuilder<User?>(
         future: futureProfile,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Failed to load profile'));
+            return const Center(child: Text('Không tải được hồ sơ'));
           } else if (snapshot.hasData) {
-            final profile = snapshot.data!;
-            fullnameController = TextEditingController(text: profile.fullname);
-            phoneController = TextEditingController(text: profile.phone);
-            emailController = TextEditingController(text: profile.email);
-            addressController = TextEditingController(text: profile.address);
+            final user = snapshot.data!;
+            firstNameController = TextEditingController(text: user.firstName);
+            lastNameController = TextEditingController(text: user.lastName);
+            phoneController = TextEditingController(text: user.phone);
+            emailController = TextEditingController(text: user.email);
+            addressController = TextEditingController(text: user.address1);
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -56,45 +67,75 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         border: Border.all(width: 1, color: Colors.black)),
                     child: ClipRect(
                       child: Image.network(
-                        profile.imageUrl,
-                        width: MediaQuery.sizeOf(context).width,
-                        height: MediaQuery.sizeOf(context).height * 0.2,
+                        user.avatar ?? user.avatar!,
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.2,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
-                    controller: fullnameController,
-                    decoration: InputDecoration(labelText: 'Họ tên'),
+                    controller: firstNameController,
+                    decoration: const InputDecoration(labelText: 'Họ'),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: lastNameController,
+                    decoration: const InputDecoration(labelText: 'Tên'),
+                  ),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: phoneController,
-                    decoration: InputDecoration(labelText: 'Số điện thoại'),
+                    decoration:
+                        const InputDecoration(labelText: 'Số điện thoại'),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
+                    decoration: const InputDecoration(labelText: 'Email'),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextField(
                     controller: addressController,
-                    decoration: InputDecoration(labelText: 'Địa chỉ'),
+                    decoration: const InputDecoration(labelText: 'Địa chỉ'),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ContainerButton(
                     label: 'Lưu',
-                    onPressed: () {
-                      //xu ly luu
+                    onPressed: () async {
+                      Map<String, dynamic> updatedData = {
+                        'avatar': user.avatar,
+                        'first_name': firstNameController.text,
+                        'last_name': lastNameController.text,
+                        'phone': phoneController.text,
+                        'email': emailController.text,
+                        'address1': addressController.text,
+                      };
+
+                      User? updatedUser = await UserService.updateUserProfile(
+                          widget.token, widget.id, updatedData);
+
+                      if (updatedUser != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Cập nhật hồ sơ thành công')),
+                        );
+                        Navigator.pop(context,
+                            updatedUser); // Trả về màn hình trước đó với user đã cập nhật
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Cập nhật hồ sơ thất bại')),
+                        );
+                      }
                     },
                   )
                 ],
               ),
             );
           } else {
-            return Center(child: Text('No profile data available'));
+            return const Center(child: Text('Không có dữ liệu hồ sơ'));
           }
         },
       ),

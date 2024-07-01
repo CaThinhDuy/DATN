@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/client/screens/cart_screen.dart';
-import 'package:flutter_application_1/client/screens/pay_screen.dart';
-import 'package:flutter_application_1/client/widgets/ImageCarousel.dart';
-import 'package:flutter_application_1/client/widgets/button_custom.dart';
-import 'package:flutter_application_1/client/widgets/up_down_widget.dart';
 import '../models/product.dart';
+import '../widgets/ImageCarousel.dart';
+import '../widgets/button_custom.dart';
+import '../widgets/up_down_widget.dart';
+import 'cart_screen.dart';
+import 'pay_screen.dart';
 
 // Product Detail Screen widget
 class ProductDetailScreen extends StatelessWidget {
@@ -54,7 +54,7 @@ class ProductDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: ImageCarousel()
+              const Center(child: ImageCarousel()
                   // Image.network(
                   //   product.imageUrl,
                   //   fit: BoxFit.contain,
