@@ -1,77 +1,56 @@
-import 'package:flutter/material.dart';
-
 class Product {
-  List<Products>? products;
-
-  Product({this.products});
-
-  Product.fromJson(Map<String, dynamic> json) {
-    if (json['products'] != null) {
-      products = <Products>[];
-      json['products'].forEach((v) {
-        products!.add(Products.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (products != null) {
-      data['products'] = products!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Products {
-  int? idType;
-  String? imageUrl;
+  int? id;
   String? name;
   String? description;
-  double? price;
-  double? cost;
-  int? promotion;
-  int? repository;
-  DateUtils? postAt;
-  int? deleted;
+  String? salePrice;
+  String? discountPrice;
+  int? categoryId;
+  int? quantity;
+  int? status;
+  int? imageId;
+  String? createdAt;
+  String? updatedAt;
 
-  Products(
-      {this.idType,
-      this.imageUrl,
+  Product(
+      {this.id,
       this.name,
       this.description,
-      this.price,
-      this.cost,
-      this.promotion,
-      this.repository,
-      this.postAt,
-      this.deleted});
+      this.salePrice,
+      this.discountPrice,
+      this.categoryId,
+      this.quantity,
+      this.status,
+      this.imageId,
+      this.createdAt,
+      this.updatedAt});
 
-  Products.fromJson(Map<String, dynamic> json) {
-    idType = json['idType'];
-    imageUrl = json['imageUrl'];
+  Product.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     name = json['name'];
     description = json['description'];
-    price = json['price'];
-    cost = json['cost'];
-    promotion = json['promotion'];
-    repository = json['repository'];
-    postAt = json['postAt'];
-    deleted = json['deleted'];
+    salePrice = json['sale_price'];
+    discountPrice = json['discount_price'];
+    categoryId = json['category_id'];
+    quantity = json['quantity'];
+    status = json['status'];
+    imageId = json['image_id'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['idType'] = idType;
-    data['imageUrl'] = imageUrl;
-    data['name'] = name;
-    data['description'] = description;
-    data['price'] = price;
-    data['cost'] = cost;
-    data['promotion'] = promotion;
-    data['repository'] = repository;
-    data['postAt'] = postAt;
-    data['deleted'] = deleted;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['sale_price'] = this.salePrice;
+    data['discount_price'] = this.discountPrice;
+    data['category_id'] = this.categoryId;
+    data['quantity'] = this.quantity;
+    data['status'] = this.status;
+    data['image_id'] = this.imageId;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
     return data;
   }
 }
