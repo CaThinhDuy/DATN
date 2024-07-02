@@ -205,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           onTap: () {
-                            _navigateToOrders(context);
+                            _navigateToOrders(context, widget.idUser);
                           },
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
@@ -252,10 +252,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _navigateToOrders(BuildContext context) {
+  void _navigateToOrders(BuildContext context, int user_id) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const OrdersScreen()),
+      MaterialPageRoute(
+          builder: (context) => OrderScreen(
+                user_id: user_id,
+              )),
     );
   }
 

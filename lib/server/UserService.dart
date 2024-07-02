@@ -28,8 +28,7 @@ class UserService {
 
     final String username = usernameController.text;
     final String password = passwordController.text;
-    print(
-        'link:${BaseUrl}-------------------------------------------------------------------------------------------');
+
     final response = await http.post(
       Uri.parse('$BaseUrl/login'), // Replace with your server URL
       headers: <String, String>{

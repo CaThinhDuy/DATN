@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/server/UserService.dart';
-import 'package:flutter_application_1/server/auth_service.dart';
 import '../widgets/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         hiddenPassword: _hiddenPassword,
         loading: _loading,
         errorMessage: _errorMessage,
-        onLoginPressed: () => AuthService.login(
+        onLoginPressed: () => UserService.login(
           context,
           _usernameController,
           _passwordController,
