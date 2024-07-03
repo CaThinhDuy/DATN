@@ -33,22 +33,28 @@ class _NavBarState extends State<NavBar> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, color: Colors.white),
             label: 'Trang chủ',
+            activeIcon: Icon(Icons.home, color: Colors.white, size: 30),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.notifications, color: Colors.white),
             label: 'Thông báo',
+            activeIcon:
+                Icon(Icons.notifications, color: Colors.white, size: 30),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person, color: Colors.white),
             label: 'Cá nhân',
+            activeIcon: Icon(Icons.person, color: Colors.white, size: 30),
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 255, 92, 52),
         onTap: _onItemTapped,
       ),
     );

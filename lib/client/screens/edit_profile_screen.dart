@@ -4,6 +4,8 @@ import 'package:flutter_application_1/client/widgets/button_custom.dart';
 import '../models/profile.dart';
 
 class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
