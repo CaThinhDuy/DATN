@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class WidgetsViewSlider extends StatefulWidget {
-  const WidgetsViewSlider({Key? key}) : super(key: key);
+  const WidgetsViewSlider({super.key});
 
   @override
   _WidgetsViewSliderState createState() => _WidgetsViewSliderState();

@@ -16,6 +16,7 @@ class LoginForm extends StatelessWidget {
   final VoidCallback onPasswordVisibilityToggled;
 
   const LoginForm({
+    super.key,
     required this.usernameController,
     required this.passwordController,
     required this.hiddenPassword,
@@ -86,7 +87,7 @@ class LoginForm extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ForgetPasswordScreen()),
+                          builder: (context) => const ForgetPasswordScreen()),
                     );
                   },
                   child: const Text(
@@ -95,21 +96,21 @@ class LoginForm extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 5),
-                ElevatedButton(
-                  onPressed: () {
-                    // TODO: Implement Google sign-in logic
-                  },
-                  style: const ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(Colors.blueAccent),
-                  ),
-                  child: const Text(
-                    'Đăng nhập với Google',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     // TODO: Implement Google sign-in logic
+                //   },
+                //   style: const ButtonStyle(
+                //     backgroundColor: WidgetStatePropertyAll(Colors.blueAccent),
+                //   ),
+                //   child: const Text(
+                //     'Đăng nhập với Google',
+                //     style: TextStyle(
+                //       color: Colors.white,
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ],

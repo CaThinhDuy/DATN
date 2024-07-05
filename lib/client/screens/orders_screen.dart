@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/server/orderService.dart';
 import 'package:flutter_application_1/utils/standard_UI.dart';
 
+import 'order_details_screen.dart';
+
 class OrderScreen extends StatefulWidget {
   final int user_id;
-  const OrderScreen({required this.user_id});
+  const OrderScreen({super.key, required this.user_id});
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
@@ -55,6 +57,7 @@ class _OrderScreenState extends State<OrderScreen> {
         mergedOrders[orderNumber] = {
           'order_number': order['order_number'],
           'status': order['status'],
+          'id': order['id'],
           'total_amount': order['total_amount'],
           'products': []
         };
@@ -163,94 +166,108 @@ class _OrderScreenState extends State<OrderScreen> {
           Expanded(
             // Added Expanded widget here
             child: isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : filteredOrders.isEmpty
-                    ? Center(child: Text('Không có đơn hàng nào'))
+                    ? const Center(child: Text('Không có đơn hàng nào'))
                     : ListView.builder(
                         itemCount: filteredOrders.length,
                         itemBuilder: (context, index) {
                           final order = filteredOrders[index];
-                          return Card(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              side: const BorderSide(width: 2),
-                            ),
-                            margin: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                ListTile(
-                                  title: Container(
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(width: 1))),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                            'Đơn hàng: ${order["order_number"]}'),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              'Trạng thái:',
-                                            ),
-                                            Text(
-                                              getStatusText(order["status"]),
-                                              style: const TextStyle(
-                                                color: Colors.redAccent,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OrderDetailsScreen(
+                                    order_id: order["id"],
+                                    TotalMoney: order["total_amount"],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: const BorderSide(width: 2),
+                              ),
+                              margin: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  ListTile(
+                                    title: Container(
+                                      decoration: const BoxDecoration(
+                                          border: Border(
+                                              bottom: BorderSide(width: 1))),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                              'Đơn hàng: ${order["order_number"]}'),
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                'Trạng thái:',
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: order["products"].length,
-                                  itemBuilder: (context, productIndex) {
-                                    final product =
-                                        order["products"][productIndex];
-                                    return ListTile(
-                                      title: Text('${product["name"]}'),
-                                      subtitle: Text(
-                                        'Số lượng: ${product["quantity"]}',
-                                        textAlign: TextAlign.end,
-                                      ),
-                                    );
-                                  },
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                        border:
-                                            Border(top: BorderSide(width: 1))),
-                                    child: Row(
-                                      children: [
-                                        const Text(
-                                          'Tổng số tiền: ',
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        Text(
-                                          '${order["total_amount"]}',
-                                          style: const TextStyle(
-                                            color: Colors.redAccent,
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.w400,
+                                              Text(
+                                                getStatusText(order["status"]),
+                                                style: const TextStyle(
+                                                  color: Colors.redAccent,
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          textAlign: TextAlign.right,
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                )
-                              ],
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: order["products"].length,
+                                    itemBuilder: (context, productIndex) {
+                                      final product =
+                                          order["products"][productIndex];
+                                      return ListTile(
+                                        title: Text('${product["name"]}'),
+                                        subtitle: Text(
+                                          'Số lượng: ${product["quantity"]}',
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        15, 10, 15, 10),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          border: Border(
+                                              top: BorderSide(width: 1))),
+                                      child: Row(
+                                        children: [
+                                          const Text(
+                                            'Tổng số tiền: ',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          Text(
+                                            '${order["total_amount"]}',
+                                            style: const TextStyle(
+                                              color: Colors.redAccent,
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         },

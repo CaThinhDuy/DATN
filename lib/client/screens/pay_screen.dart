@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PayScreen extends StatelessWidget {
-  const PayScreen({Key? key}) : super(key: key);
+  const PayScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

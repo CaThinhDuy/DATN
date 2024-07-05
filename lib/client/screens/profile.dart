@@ -3,7 +3,6 @@ import 'package:flutter_application_1/client/models/user_db.dart';
 import 'package:flutter_application_1/client/widgets/nav.dart';
 import '../../server/UserService.dart';
 import 'edit_profile_screen.dart';
-import 'login_screen.dart';
 import 'orders_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -12,11 +11,11 @@ class ProfileScreen extends StatefulWidget {
   final int idUser;
 
   const ProfileScreen({
-    Key? key,
+    super.key,
     required this.token,
     required this.onLogout,
     required this.idUser,
-  }) : super(key: key);
+  });
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -69,11 +68,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         backgroundColor: const Color.fromARGB(255, 255, 92, 52),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: const Color(0xFFf5f5f5),
       body: _userData == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -252,12 +251,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _navigateToOrders(BuildContext context, int user_id) {
+  void _navigateToOrders(BuildContext context, int userId) {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => OrderScreen(
-                user_id: user_id,
+                user_id: userId,
               )),
     );
   }

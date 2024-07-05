@@ -9,7 +9,7 @@ import '../screens/trang_chu.dart';
 class NavBar extends StatefulWidget {
   final String? token;
   final int? id;
-  const NavBar({Key? key, this.token, this.id}) : super(key: key);
+  const NavBar({super.key, this.token, this.id});
 
   @override
   _NavBarState createState() => _NavBarState();

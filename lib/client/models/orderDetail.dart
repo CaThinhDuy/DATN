@@ -30,15 +30,15 @@ class orderDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['order_id'] = this.orderId;
-    data['product_id'] = this.productId;
-    data['quantity'] = this.quantity;
-    data['unit_price'] = this.unitPrice;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['order_id'] = orderId;
+    data['product_id'] = productId;
+    data['quantity'] = quantity;
+    data['unit_price'] = unitPrice;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['status'] = status;
     return data;
   }
 }

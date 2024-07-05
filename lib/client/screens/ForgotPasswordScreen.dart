@@ -5,6 +5,8 @@ import 'package:flutter_application_1/server/UserService.dart';
 import 'package:flutter_application_1/utils/standard_UI.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
+  const ForgetPasswordScreen({super.key});
+
   @override
   _ForgetPasswordScreenState createState() => _ForgetPasswordScreenState();
 }
@@ -31,9 +33,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     if (success) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ResetPasswordScreen()),
+        MaterialPageRoute(builder: (context) => const ResetPasswordScreen()),
       );
-      SnackBar(content: Text('Gửi mail lấy lại mật khẩu thành công'));
+      const SnackBar(content: Text('Gửi mail lấy lại mật khẩu thành công'));
     } else {
       setState(() {
         _errorMessage = 'Gửi mail không thành công. Vui lòng thử lại.';
