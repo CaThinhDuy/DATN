@@ -25,6 +25,22 @@ class LoginForm extends StatelessWidget {
     required this.onLoginPressed,
     required this.onPasswordVisibilityToggled,
   });
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Vui lòng nhập mật khẩu';
+    }
+    // if (value.length < 6) {
+    //   return 'Mật khẩu phải có ít nhất 6 ký tự';
+    // }
+    return null;
+  }
+
+  String? _validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Vui lòng nhập tên đăng nhập';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +61,7 @@ class LoginForm extends StatelessWidget {
               controller: usernameController,
               icon: Icons.account_circle_outlined,
               labelText: 'Email/Số điện thoại',
+              validator: _validateUsername,
             ),
             const SizedBox(height: 16.0),
             Padding(
@@ -59,6 +76,7 @@ class LoginForm extends StatelessWidget {
                   onPressed: onPasswordVisibilityToggled,
                 ),
                 obscureText: hiddenPassword,
+                validator: _validatePassword,
               ),
             ),
             if (errorMessage != null) ErrorMessage(errorMessage: errorMessage!),
@@ -95,22 +113,6 @@ class LoginForm extends StatelessWidget {
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),
-                const SizedBox(width: 5),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     // TODO: Implement Google sign-in logic
-                //   },
-                //   style: const ButtonStyle(
-                //     backgroundColor: WidgetStatePropertyAll(Colors.blueAccent),
-                //   ),
-                //   child: const Text(
-                //     'Đăng nhập với Google',
-                //     style: TextStyle(
-                //       color: Colors.white,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ],

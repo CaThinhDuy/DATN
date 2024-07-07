@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/models/notification.dart';
 import 'package:flutter_application_1/client/models/user_db.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/utils/api.dart';
 
+import '../client/screens/login_screen.dart';
 import '../client/widgets/nav.dart';
 
 const String BaseUrl = Api.userServiceUrl;
@@ -59,27 +62,69 @@ class UserService {
                   id: id,
                 )),
       );
+    } else if (response.statusCode == 401) {
+      // Xử lý lỗi xác thực
+      setErrorMessage('Tên người dùng hoặc mật khẩu không đúng.');
+    } else if (response.statusCode == 500) {
+      // Xử lý lỗi từ phía máy chủ
+      setErrorMessage('Lỗi máy chủ, vui lòng thử lại sau.');
     } else {
-      // Handle error
+      // Xử lý các trường hợp lỗi khác
       setErrorMessage('Đăng nhập không thành công. Vui lòng thử lại.');
     }
   }
 
-  static Future<bool> register(
-      String username, String password, String email) async {
-    final response = await http.post(
-      Uri.parse('$BaseUrl/register'), // Replace with your server URL
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'username': username,
-        'password': password,
-        'email': email,
-      }),
-    );
+  static Future<void> register(
+    BuildContext context,
+    TextEditingController usernameController,
+    TextEditingController passwordController,
+    TextEditingController emailController,
+    Function(bool) setLoading,
+    Function(String?) setErrorMessage,
+  ) async {
+    setLoading(true);
+    setErrorMessage(null);
 
-    return (response.statusCode == 201) ? true : false;
+    final String username = usernameController.text;
+    final String password = passwordController.text;
+    final String email = emailController.text;
+
+    try {
+      final response = await http.post(
+        Uri.parse('$BaseUrl/register'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'username': username,
+          'password': password,
+          'email': email,
+        }),
+      );
+
+      setLoading(false);
+
+      if (response.statusCode == 201) {
+        // Đăng ký thành công
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => NavBar()),
+        );
+      } else if (response.statusCode == 400) {
+        // Xử lý lỗi từ phía máy chủ (ví dụ: dữ liệu không hợp lệ)
+        setErrorMessage('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
+      } else if (response.statusCode == 409) {
+        // Xử lý lỗi từ phía máy chủ (ví dụ: tài khoản đã tồn tại)
+        setErrorMessage('Tài khoản đã tồn tại. Vui lòng thử lại.');
+      } else {
+        // Xử lý các trường hợp lỗi khác
+        setErrorMessage('Đăng ký không thành công. Vui lòng thử lại.');
+      }
+    } catch (e) {
+      setLoading(false);
+      // Xử lý lỗi kết nối mạng
+      setErrorMessage('Lỗi kết nối mạng. Vui lòng kiểm tra kết nối của bạn.');
+    }
   }
 
   static Future<User?> getUserProfile(String token, int idUser) async {
@@ -158,5 +203,29 @@ class UserService {
       }),
     );
     return (response.statusCode == 200) ? true : false;
+  }
+
+  static Future<List<Map<String, dynamic>>?> getNotification(
+      String token, int idUser) async {
+    try {
+      final response = await http.get(
+        Uri.parse('${Api.notificationService}/user/$idUser'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((item) => item as Map<String, dynamic>).toList();
+      } else {
+        print('Failed to load notification: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error loading notification: $e');
+      return null;
+    }
   }
 }

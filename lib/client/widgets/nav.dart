@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/screens/Notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/notification_list.dart';
@@ -36,7 +37,13 @@ class _NavBarState extends State<NavBar> {
 
   List<Widget> get _widgetOptions => [
         const HomePage(),
-        const NotificationScreen(),
+        if (_token != null && _userId != null)
+          NotificationScreen(
+            UserID: _userId!,
+            token: _token!,
+          )
+        else
+          const NotificationNoToken(),
         if (_token != null && _userId != null)
           ProfileScreen(
             token: _token!,
