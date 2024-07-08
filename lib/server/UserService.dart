@@ -8,15 +8,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/utils/api.dart';
 
-import '../client/screens/login_screen.dart';
 import '../client/widgets/nav.dart';
 
 const String BaseUrl = Api.userServiceUrl;
 
 class UserService {
-  static Future<void> saveToken(String token) async {
+  static Future<void> saveTokenID(String token, int id) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('authToken', token);
+    await prefs.setInt('id', id);
   }
 
   static Future<void> login(
@@ -51,7 +51,7 @@ class UserService {
       final int id = responseBody['id'];
       print(response.body);
       // Save token into SharedPreferences
-      await saveToken(token);
+      await saveTokenID(token, id);
 
       // Navigate to NavBar upon successful login
       Navigator.pushReplacement(
