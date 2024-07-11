@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_application_1/client/models/user_db.dart';
 import '../../server/UserService.dart';
@@ -108,6 +109,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: phoneController,
                     decoration:
                         const InputDecoration(labelText: 'Số điện thoại'),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   TextField(
