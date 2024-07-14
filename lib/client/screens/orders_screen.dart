@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/server/orderService.dart';
 import 'package:flutter_application_1/utils/standard_UI.dart';
 
-import '../widgets/product_list.dart';
+import '../../server/api_services.dart';
+
+import '../models/product.dart';
+import '../models/product_image.dart';
+import '../widgets/widgets_trang_chu/product_list.dart';
 import 'order_details_screen.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -18,6 +22,10 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   List<Map<String, dynamic>> orders = []; // Danh sách đơn hàng ban đầu
   List<Map<String, dynamic>> filteredOrders = []; // Danh sách đơn hàng được lọc
+  List<Product> _products = [];
+
+  List<ProductImage> _productImages = [];
+
   bool isLoading = true; // Biến xác định trạng thái tải dữ liệu
   int selectedStatus =
       -1; // Trạng thái đơn hàng được chọn, -1 là không có bộ lọc
@@ -28,6 +36,24 @@ class _OrderScreenState extends State<OrderScreen> {
     super.initState();
     orderService = OrderService(); // Khởi tạo dịch vụ đơn hàng
     fetchOrders(); // Gọi hàm để tải danh sách đơn hàng
+    _loadProductData(); // Gọi hàm để tải danh sách sản phẩm
+  }
+
+  Future<void> _loadProductData() async {
+    try {
+      final apiService = APIServices();
+      final products = await apiService.getAll('product');
+      final productImages = await apiService.getAll('product_image');
+
+      setState(() {
+        _products = products.map((json) => Product.fromJson(json)).toList();
+
+        _productImages =
+            productImages.map((json) => ProductImage.fromJson(json)).toList();
+      });
+    } catch (e) {
+      print('Lỗi: $e');
+    }
   }
 
   // Hàm tải danh sách đơn hàng từ server
@@ -187,28 +213,30 @@ class _OrderScreenState extends State<OrderScreen> {
                     child:
                         CircularProgressIndicator()) // Hiển thị tiêu đề tải nếu isLoading là true
                 : filteredOrders.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                               height: 100,
                               child: Text('Không có đơn hàng nào')),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             "Gợi ý sản phẩm",
                             style: TextStyle(
                               fontSize: 20,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Expanded(
-                            flex: 3,
-                            child: ProductList(),
+                            child: SingleChildScrollView(
+                                child: ProductList(
+                                    products: _products,
+                                    productImages: _productImages)),
                           ),
                         ],
                       )) // Hiển thị thông báo nếu không có đơn hàng

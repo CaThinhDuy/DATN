@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/models/user_db.dart';
 import 'package:flutter_application_1/client/widgets/nav.dart';
-
 import '../../server/UserService.dart';
 import 'edit_profile_screen.dart';
-
 import 'orders_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,7 +18,6 @@ class ProfileScreen extends StatefulWidget {
   });
 
   @override
-  // ignore: library_private_types_in_public_api
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
@@ -262,12 +259,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 user_id: userId,
               )),
     );
-
-    if (updatedUser != null) {
-      setState(() {
-        _userData = updatedUser;
-      });
-    }
   }
 
   Future<void> _performLogout(BuildContext context) async {
