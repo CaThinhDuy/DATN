@@ -14,7 +14,7 @@ class ProductList extends StatelessWidget {
     required this.products,
     required this.productImages,
   });
-
+  //update new model product and product image
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -28,7 +28,7 @@ class ProductList extends StatelessWidget {
       itemBuilder: (context, index) {
         Product product = products[index];
         ProductImage? proImg = productImages.firstWhere(
-          (image) => image.productId == product.id,
+          (image) => image.id == product.imageId,
         );
 
         return ProductCard(

@@ -1,20 +1,24 @@
-// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/widgets/widgets_trang_chu/category_widget.dart';
-// import 'package:flutter_application_1/client/widgets/custom_app_bar.dart';
 import 'package:flutter_application_1/client/widgets/widgets_trang_chu/search_widget.dart';
-
 import '../../server/api_services.dart';
+import '../../server/user_state.dart';
+import '../models/order.dart';
 import '../models/product.dart';
 import '../models/product_image.dart';
+// import '../widgets/search_widget.dart';
 import '../widgets/widgets_trang_chu/page_view_slider.dart';
-// import '../widgets/product_cate.dart';
 import '../widgets/widgets_trang_chu/product_list.dart';
-// import 'cart_screen.dart';
+import 'cart_screen.dart';
 import 'search_screen.dart';
+import 'package:provider/provider.dart';
+
+
 
 class HomePage extends StatefulWidget {
+
   const HomePage({super.key});
+  
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -25,16 +29,20 @@ class _HomePageState extends State<HomePage> {
   List<Product> _filteredProducts = [];
   List<ProductImage> _productImages = [];
 
+//update new model product and product Image
   @override
   void initState() {
     super.initState();
     _loadProductData();
   }
 
+
   Future<void> _loadProductData() async {
     try {
-      final products = await APIServices.getAll('product');
-      final productImages = await APIServices.getAll('product_image');
+      final apiService = APIServices();
+      final products = await apiService.getAll('product');
+      final productImages = await apiService.getAll('product_image');
+
 
       setState(() {
         _products = products.map((json) => Product.fromJson(json)).toList();
@@ -43,9 +51,7 @@ class _HomePageState extends State<HomePage> {
             productImages.map((json) => ProductImage.fromJson(json)).toList();
       });
     } catch (e) {
-      setState(() {
-        print('Loi');
-      });
+      print('Lỗi: $e');
     }
   }
 
@@ -64,33 +70,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: CustomAppBar(
-        onSearchTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SearchScreen()),
-          );
-        },
-        onCartTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => CartScreen(
-          //             cart: const [],
-          //             onCartUpdated: (updatedCart) {
-          //               setState(() {
-          //                 [] = updatedCart;
-          //               });
-          //             },
-          //           )),
-          // );
-        },
-      ),
+      appBar: CustomAppBar(onSearchTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const SearchScreen()));
+      }, onCartTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const CartScreen()));
+      }),
       body: SingleChildScrollView(
           child: Column(
         children: [
-          PageViewSlider(),
+          const PageViewSlider(),
           CategoryWidget(onCategorySelected: _filterProductsByCategory),
           ProductList(
             products: _filteredProducts,

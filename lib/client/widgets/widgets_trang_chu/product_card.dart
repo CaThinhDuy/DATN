@@ -13,7 +13,7 @@ class ProductCard extends StatelessWidget {
     required this.product,
     required this.proImg,
   });
-
+//update data new Product and Image_product
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -56,8 +56,13 @@ class ProductCard extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '${product.salePrice.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} đ',
-                style: const TextStyle(color: Colors.red),
+                '${double.tryParse(product.salePrice.toString())?.toStringAsFixed(0).replaceAllMapped(
+                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                      (Match m) => '${m[1]},',
+                    ) ?? '0'} đ',
+                style: const TextStyle(
+                  fontSize: 18.0,
+                ),
               ),
             ),
           ],

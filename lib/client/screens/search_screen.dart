@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../server/api_services.dart';
+
 import '../models/product.dart';
 import '../models/product_image.dart';
 import '../widgets/widgets_trang_chu/product_detail.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+  const SearchScreen({super.key});
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -15,7 +16,7 @@ class _SearchPageState extends State<SearchScreen> {
   List<Product> _products = [];
   List<ProductImage> _productImages = [];
   final TextEditingController _searchController = TextEditingController();
-
+//update new model Product and product image
   @override
   void initState() {
     super.initState();
@@ -24,15 +25,16 @@ class _SearchPageState extends State<SearchScreen> {
 
   Future<void> _loadProductData() async {
     try {
-      final products = await APIServices.getAll('product');
-      final productImages = await APIServices.getAll('product_image');
+      final apiService = APIServices();
+      final products = await apiService.getAll('product');
+      final productImages = await apiService.getAll('product_image');
 
       setState(() {
         _products = products.map((json) => Product.fromJson(json)).toList();
         _productImages = productImages
             .map((json) => ProductImage.fromJson(json))
-            .where((productImage) => _products
-                .any((product) => product.id == productImage.productId))
+            .where((productImage) =>
+                _products.any((product) => product.imageId == productImage.id))
             .toList();
       });
     } catch (e) {

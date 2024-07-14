@@ -1,7 +1,3 @@
-// import 'dart:convert';
-
-// import 'product_image.dart';
-
 class Product {
   final int id;
   final String name;
@@ -11,6 +7,7 @@ class Product {
   final int categoryId;
   late final int quantity;
   final int status;
+  final int imageId;
 
   Product({
     required this.id,
@@ -21,6 +18,7 @@ class Product {
     required this.categoryId,
     required this.quantity,
     required this.status,
+    required this.imageId
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -33,6 +31,9 @@ class Product {
       categoryId: json['category_id'],
       quantity: json['quantity'],
       status: json['status'],
+      imageId: json['imageId'],
     );
   }
 }
+
+///Không có sửa nha Nam

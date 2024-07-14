@@ -1,33 +1,62 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_application_1/client/screens/edit_profile_screen.dart';
-import 'package:flutter_application_1/client/screens/orders_screen.dart';
+import 'package:flutter_application_1/client/models/user_db.dart';
+import 'package:flutter_application_1/client/widgets/nav.dart';
+// import '../../server/UserService.dart';
+import '../../server/user_services.dart';
+import '../../server/user_state.dart';
+import 'edit_profile_screen.dart';
+// import 'login_screen.dart';
+import 'orders_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String token;
+  final Function() onLogout;
+  final int idUser;
+
+  const ProfileScreen({
+    super.key,
+    required this.token,
+    required this.onLogout,
+    required this.idUser,
+  });
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Map<String, dynamic>? _profileData;
+  User? _userData;
 
   @override
   void initState() {
     super.initState();
-    _loadProfileData();
+    _loadUserData();
   }
 
-  Future<void> _loadProfileData() async {
+  Future<void> _loadUserData() async {
     try {
-      String data = await rootBundle.loadString('assets/profile.json');
-      setState(() {
-        _profileData = jsonDecode(data);
-      });
+      User? user =
+          await UserService.getUserProfile(widget.token, widget.idUser);
+      if (user != null) {
+        setState(() {
+          _userData = user;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Không tìm thấy thông tin người dùng'),
+          ),
+        );
+      }
     } catch (e) {
-      print('Error loading profile data: $e');
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đã xảy ra lỗi khi tải dữ liệu người dùng'),
+        ),
+      );
+      print('Lỗi lấy dữ liệu: $e');
     }
   }
 
@@ -40,14 +69,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 20,
+            fontSize: 30,
           ),
         ),
         backgroundColor: const Color.fromARGB(255, 255, 92, 52),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: const Color(0xFFf5f5f5),
-      body: _profileData == null
-          ? Center(child: CircularProgressIndicator())
+      body: _userData == null
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -59,12 +89,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         CircleAvatar(
                           radius: 50,
                           backgroundImage: NetworkImage(
-                            _profileData!['Profile'][0]['imageUrl'],
+                            _userData!.avatar ??
+                                ('https://w7.pngwing.com/pngs/205/731/png-transparent-default-avatar-thumbnail.png'),
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _profileData!['Profile'][0]['fullname'],
+                          ' ${_userData!.lastName}',
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -73,25 +104,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                              border: Border.all(width: 2, color: Colors.black),
-                              borderRadius: BorderRadius.circular(15)),
+                            border: Border.all(width: 2, color: Colors.black),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const Icon(
                                       Icons.phone,
                                       color: Color.fromARGB(255, 255, 92, 52),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      _profileData!['Profile'][0]['phone'],
+                                      _userData!.phone!,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -100,21 +129,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const Icon(
                                       Icons.mail,
                                       color: Color.fromARGB(255, 255, 92, 52),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
+                                    const SizedBox(width: 10),
                                     Text(
-                                      _profileData!['Profile'][0]['email'],
+                                      _userData!.email!,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -123,25 +147,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const Icon(
                                       Icons.location_on_outlined,
                                       color: Color.fromARGB(255, 255, 92, 52),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      _profileData!['Profile'][0]['address'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        _userData!.address1!,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
@@ -171,9 +193,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           onTap: () {
-                            _navigateToEditProfile(context);
+                            _navigateToEditProfile();
                           },
-                          selectedColor: Colors.white,
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
                         ListTile(
@@ -190,7 +211,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             _navigateToOrders(context);
                           },
-                          selectedColor: Colors.white,
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
                         ListTile(
@@ -207,7 +227,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: () {
                             _performLogout(context);
                           },
-                          selectedColor: Colors.white,
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
                       ],
@@ -219,11 +238,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _navigateToEditProfile(BuildContext context) {
-    Navigator.push(
+  void _navigateToEditProfile() async {
+    final updatedUser = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EditProfileScreen()),
+      MaterialPageRoute(
+        builder: (context) => EditProfileScreen(
+          token: widget.token,
+          id: widget.idUser,
+        ),
+      ),
     );
+
+    if (updatedUser != null) {
+      setState(() {
+        _userData = updatedUser;
+      });
+    }
   }
 
   void _navigateToOrders(BuildContext context) {
@@ -233,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _performLogout(BuildContext context) {
+  Future<void> _performLogout(BuildContext context) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -250,13 +280,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TextButton(
               child: const Text('Đăng xuất'),
               onPressed: () {
-                Navigator.of(context).pop();
-                // Thêm logic đăng xuất tại đây
+                _logout().then((_) {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NavBar()),
+                  );
+                });
               },
             ),
           ],
         );
       },
     );
+  }
+
+  Future<void> _logout() async {
+    // Thực hiện các thao tác đăng xuất ở đây, ví dụ như xóa token, dữ liệu đăng nhập, v.v.
+    widget.onLogout(); // Gọi callback onLogout để thông báo cho widget cha
   }
 }

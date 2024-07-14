@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/client/widgets/nav.dart';
+
+import 'client/widgets/nav.dart';
+import 'server/user_state.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    MyApp(),
+    ChangeNotifierProvider(
+      create: (_) => UserState(),
+      child: const MyApp(),
+    ),
   );
 }
 

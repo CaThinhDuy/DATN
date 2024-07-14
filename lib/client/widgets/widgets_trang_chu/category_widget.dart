@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 typedef OnCategorySelected = void Function(int categoryId);
 
 class CategoryWidget extends StatefulWidget {
@@ -21,7 +22,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: SizedBox(
-        height: 100.0, // Adjust the height as needed
+        height: 140.0, // Adjust the height as needed
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [

@@ -1,58 +1,47 @@
 import 'dart:convert';
-// ignore: depend_on_referenced_packages
+import 'package:flutter_application_1/utils/api.dart';
 import 'package:http/http.dart' as http;
 
 class APIServices {
-  static const _baseUrl = 'http://localhost:3000';
+  // data synchronization API
+  static const _baseUrl = Api.baseUrl;
 
-  static Future<List<dynamic>> getAll(String endpoint) async {
+  Future<List<dynamic>> getAll(String endpoint) async {
     final url = Uri.parse('$_baseUrl/$endpoint');
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      return jsonDecode(response.body) as List<dynamic>;
+      print('${endpoint}: ${response.body}');
+      return jsonDecode(response.body);
     } else {
-      throw Exception('Lỗi khi gọi API GET: ${response.statusCode}');
+      throw Exception('Failed to fetch data from $endpoint');
     }
   }
 
-  static Future<dynamic> get(String endpoint) async {
-    final url = Uri.parse('$_baseUrl/$endpoint');
+  Future<dynamic> getById(String endpoint, int id) async {
+    final url = Uri.parse('$_baseUrl/$endpoint/$id');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Lỗi khi gọi API GET: ${response.statusCode}');
+      throw Exception('Failed to fetch data from $endpoint/$id');
     }
   }
 
-  ////////////
-  static Future<dynamic> getById(String endpoint, String id) async {
-  final url = Uri.parse('$_baseUrl/$endpoint/$id');
-  final response = await http.get(url);
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body);
-  } else {
-    throw Exception('Lỗi khi gọi API GET: ${response.statusCode}');
-  }
-}
-  ///////////
-
-  static Future<dynamic> post(String endpoint, dynamic data) async {
+  Future<dynamic> create(String endpoint, Map<String, dynamic> data) async {
     final url = Uri.parse('$_baseUrl/$endpoint');
     final response = await http.post(
       url,
       body: jsonEncode(data),
       headers: {'Content-Type': 'application/json'},
     );
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (response.statusCode == 201) {
       return jsonDecode(response.body);
-    } else {
-      throw Exception('Lỗi khi gọi API POST: ${response.statusCode}');
     }
   }
 
-  static Future<dynamic> put(String endpoint, dynamic data) async {
-    final url = Uri.parse('$_baseUrl/$endpoint');
+  Future<dynamic> update(
+      String endpoint, int? id, Map<String, dynamic> data) async {
+    final url = Uri.parse('$_baseUrl/$endpoint/$id');
     final response = await http.put(
       url,
       body: jsonEncode(data),
@@ -61,15 +50,15 @@ class APIServices {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Lỗi khi gọi API PUT: ${response.statusCode}');
+      throw Exception('Failed to update data in $endpoint/$id');
     }
   }
 
-  static Future<void> delete(String endpoint) async {
-    final url = Uri.parse('$_baseUrl/$endpoint');
+  Future<void> delete(String endpoint, int id) async {
+    final url = Uri.parse('$_baseUrl/$endpoint/$id');
     final response = await http.delete(url);
     if (response.statusCode != 204) {
-      throw Exception('Lỗi khi gọi API DELETE: ${response.statusCode}');
+      throw Exception('Failed to delete data in $endpoint/$id');
     }
   }
 }
