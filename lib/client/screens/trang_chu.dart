@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_application_1/client/widgets/widgets_trang_chu/category_widget.dart';
 import 'package:flutter_application_1/client/widgets/widgets_trang_chu/search_widget.dart';
 import '../../server/api_services.dart';
@@ -13,12 +14,8 @@ import 'cart_screen.dart';
 import 'search_screen.dart';
 import 'package:provider/provider.dart';
 
-
-
 class HomePage extends StatefulWidget {
-
   const HomePage({super.key});
-  
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -36,13 +33,11 @@ class _HomePageState extends State<HomePage> {
     _loadProductData();
   }
 
-
   Future<void> _loadProductData() async {
     try {
       final apiService = APIServices();
       final products = await apiService.getAll('product');
       final productImages = await apiService.getAll('product_image');
-
 
       setState(() {
         _products = products.map((json) => Product.fromJson(json)).toList();

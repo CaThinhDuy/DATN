@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../server/user_services.dart';
+import 'package:flutter_application_1/server/UserService.dart';
+import 'package:flutter_application_1/utils/standard_UI.dart';
 import '../widgets/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
           style: TextStyle(
               color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color.fromARGB(255, 255, 92, 52),
+        backgroundColor: UI.backgroundApp,
       ),
       body: LoginForm(
         usernameController: _usernameController,

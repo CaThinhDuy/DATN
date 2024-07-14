@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/models/user_db.dart';
+import 'package:flutter_application_1/client/widgets/button_custom.dart';
+import 'package:flutter_application_1/client/widgets/row_custom.dart';
 import 'package:flutter_application_1/server/orderService.dart';
 import 'package:flutter_application_1/utils/standard_UI.dart';
 
-import 'order_details_screen.dart';
+import '../models/order_db.dart';
 
-class OrderScreen extends StatefulWidget {
-  final int user_id;
-  const OrderScreen({super.key, required this.user_id});
+class OrderDetailsScreen extends StatefulWidget {
+  final int order_id;
+  final int TotalMoney;
+  const OrderDetailsScreen(
+      {Key? key, required this.order_id, required this.TotalMoney})
+      : super(key: key);
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   List<Map<String, dynamic>> orders = [];
-  List<Map<String, dynamic>> filteredOrders = [];
   bool isLoading = true;
-  int selectedStatus = -1; // -1 indicates no filter
   late OrderService orderService;
 
   @override
@@ -28,14 +32,10 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> fetchOrders() async {
     try {
-      final fetchedOrders = await orderService.fetchOrders(widget.user_id);
+      final fetchedOrders =
+          await orderService.fetchOrdersDetails(widget.order_id);
       setState(() {
         orders = mergeOrders(fetchedOrders);
-        filteredOrders = orders; // Initialize with all orders
-        for (var order in orders) {
-          order['total_amount'] =
-              int.parse(order['total_amount'].split('.')[0]);
-        }
         isLoading = false;
       });
     } catch (e) {
@@ -56,32 +56,45 @@ class _OrderScreenState extends State<OrderScreen> {
       if (!mergedOrders.containsKey(orderNumber)) {
         mergedOrders[orderNumber] = {
           'order_number': order['order_number'],
+          'users': [],
           'status': order['status'],
-          'id': order['id'],
-          'total_amount': order['total_amount'],
-          'products': []
+          'products': [],
+          'products_image': [],
         };
       }
-      mergedOrders[orderNumber]!['products'].add({
-        'name': order['name'],
-        'quantity': order['quantity'],
-        'product_id': order['product_id'],
-      });
-    }
+      // Check if the product is already in products list of mergedOrders
+      bool productExists = mergedOrders[orderNumber]!['products']
+          .any((product) => product['product_id'] == order['product_id']);
+      bool userExists = mergedOrders[orderNumber]!['users']
+          .any((users) => users['phone'] == order['phone']);
+      bool imageExists = mergedOrders[orderNumber]!['products_image']
+          .any((image) => image['image1'] == order['image1']);
 
-    return mergedOrders.values.toList();
-  }
-
-  void filterOrders(int status) {
-    setState(() {
-      selectedStatus = status;
-      if (status == -1) {
-        filteredOrders = orders;
-      } else {
-        filteredOrders =
-            orders.where((order) => order['status'] == status).toList();
+      if (!productExists) {
+        mergedOrders[orderNumber]!['products'].add({
+          'name': order['product_name'],
+          'product_id': order['product_id'],
+          'unit_price': order['unit_price'],
+          'quantity': order['quantity'],
+        });
       }
-    });
+
+      if (!userExists) {
+        mergedOrders[orderNumber]!['users'].add({
+          'last_name': order['last_name'],
+          'phone': order['phone'],
+          'address1': order['address1'],
+        });
+      }
+
+      if (!imageExists) {
+        mergedOrders[orderNumber]!['products_image'].add({
+          'image1': order['image1'],
+        });
+      }
+    }
+    print(mergedOrders.values.toList());
+    return mergedOrders.values.toList();
   }
 
   @override
@@ -89,7 +102,7 @@ class _OrderScreenState extends State<OrderScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Đơn hàng',
+          'Chi tiết đơn hàng',
           style: TextStyle(
             fontSize: UI.wordTileSize,
             color: UI.wordTile,
@@ -100,91 +113,22 @@ class _OrderScreenState extends State<OrderScreen> {
         iconTheme: const IconThemeData(color: UI.wordTile),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () => filterOrders(-1),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        selectedStatus == -1 ? Colors.blue : Colors.grey,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  child: const Text('Tất cả',
-                      style: TextStyle(color: Colors.white)),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () => filterOrders(1),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        selectedStatus == 1 ? Colors.blue : Colors.grey,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  child: const Text('Chưa xử lý',
-                      style: TextStyle(color: Colors.white)),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () => filterOrders(2),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        selectedStatus == 2 ? Colors.blue : Colors.grey,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  child: const Text('Đang vận chuyển',
-                      style: TextStyle(color: Colors.white)),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () => filterOrders(3),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        selectedStatus == 3 ? Colors.blue : Colors.grey,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  child: const Text('Đã giao thành công',
-                      style: TextStyle(color: Colors.white)),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () => filterOrders(4),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        selectedStatus == 4 ? Colors.blue : Colors.grey,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
-                  child: const Text('Đã hủy',
-                      style: TextStyle(color: Colors.white)),
-                ),
-              ],
-            ),
-          ),
           Expanded(
-            // Added Expanded widget here
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : filteredOrders.isEmpty
+                : orders.isEmpty
                     ? const Center(child: Text('Không có đơn hàng nào'))
                     : ListView.builder(
-                        itemCount: filteredOrders.length,
+                        itemCount: orders.length,
                         itemBuilder: (context, index) {
-                          final order = filteredOrders[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => OrderDetailsScreen(
-                                    order_id: order["id"],
-                                    TotalMoney: order["total_amount"],
-                                  ),
-                                ),
-                              );
-                            },
+                          final order = orders[index];
+                          return Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 650, // Đặt chiều cao tối thiểu
+                            ),
                             child: Card(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
@@ -193,8 +137,29 @@ class _OrderScreenState extends State<OrderScreen> {
                               ),
                               margin: const EdgeInsets.all(8.0),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        RowCustom(
+                                          icon: Icons.person_rounded,
+                                          lable: order["users"][0]["last_name"],
+                                        ),
+                                        RowCustom(
+                                          icon: Icons.home_work_rounded,
+                                          lable: order["users"][0]["address1"],
+                                        ),
+                                        RowCustom(
+                                          icon: Icons.phone_in_talk,
+                                          lable: order["users"][0]["phone"],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   ListTile(
                                     title: Container(
                                       decoration: const BoxDecoration(
@@ -232,11 +197,19 @@ class _OrderScreenState extends State<OrderScreen> {
                                       final product =
                                           order["products"][productIndex];
                                       return ListTile(
+                                        leading: Image.network(
+                                          order["products_image"][productIndex]
+                                              ["image1"],
+                                          width: 60,
+                                          height: 60,
+                                          fit: BoxFit.cover,
+                                        ),
                                         title: Text('${product["name"]}'),
                                         subtitle: Text(
                                           'Số lượng: ${product["quantity"]}',
                                           textAlign: TextAlign.end,
                                         ),
+                                        trailing: Text(product["unit_price"]),
                                       );
                                     },
                                   ),
@@ -254,7 +227,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                             style: TextStyle(fontSize: 20),
                                           ),
                                           Text(
-                                            '${order["total_amount"]}',
+                                            '${widget.TotalMoney}',
                                             style: const TextStyle(
                                               color: Colors.redAccent,
                                               fontSize: 25,
@@ -273,6 +246,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         },
                       ),
           ),
+          // ContainerButton(label: 'HỦY', onPressed: onPressed)
         ],
       ),
     );

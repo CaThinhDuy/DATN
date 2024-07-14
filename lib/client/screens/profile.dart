@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/models/user_db.dart';
 import 'package:flutter_application_1/client/widgets/nav.dart';
-// import '../../server/UserService.dart';
-import '../../server/user_services.dart';
-import '../../server/user_state.dart';
+import '../../server/UserService.dart';
 import 'edit_profile_screen.dart';
-// import 'login_screen.dart';
 import 'orders_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,7 +18,6 @@ class ProfileScreen extends StatefulWidget {
   });
 
   @override
-  // ignore: library_private_types_in_public_api
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
@@ -50,7 +46,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       }
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Đã xảy ra lỗi khi tải dữ liệu người dùng'),
@@ -209,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           onTap: () {
-                            _navigateToOrders(context);
+                            _navigateToOrders(context, widget.idUser);
                           },
                           selectedTileColor: const Color(0xFFee4d2d),
                         ),
@@ -256,10 +251,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _navigateToOrders(BuildContext context) {
+  void _navigateToOrders(BuildContext context, int userId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const OrdersScreen()),
+      MaterialPageRoute(
+          builder: (context) => OrderScreen(
+                user_id: userId,
+              )),
     );
   }
 
