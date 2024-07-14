@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/widgets/button_custom.dart';
 import 'package:flutter_application_1/client/widgets/nav.dart';
-// import 'package:flutter_application_1/utils/api.dart';
-import 'package:flutter_application_1/utils/standard_UI.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
 
-// import '../../server/UserService.dart';
-import '../../server/user_services.dart';
-// import 'login_screen.dart';
+import 'package:flutter_application_1/utils/standard_UI.dart';
+
+import '../../server/UserService.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
+
   @override
   _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
 }
@@ -20,12 +18,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _resetPassword() async {
-    bool _loading = false;
-    String? _errorMessage;
+    bool loading = false;
+    String? errorMessage;
 
     setState(() {
-      _loading = true;
-      _errorMessage = null;
+      loading = true;
+      errorMessage = null;
     });
 
     final String token = _tokenController.text;
@@ -33,7 +31,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     final success = await UserService.resetPassWord(token, newPassword);
 
     setState(() {
-      _loading = false;
+      loading = false;
     });
 
     if (success) {
@@ -45,7 +43,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       );
     } else {
       setState(() {
-        _errorMessage = 'Thay đổi mật khẩu thất bại';
+        errorMessage = 'Thay đổi mật khẩu thất bại';
       });
     }
   }
@@ -84,7 +82,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               decoration: const InputDecoration(labelText: 'Mật khẩu mới'),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ContainerButton(
               onPressed: _resetPassword,
               label: 'Đặt lại mật khẩu',

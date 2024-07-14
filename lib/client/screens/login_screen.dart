@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../server/user_services.dart';
-import '../widgets/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,25 +36,59 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color.fromARGB(255, 255, 92, 52),
-      ),
-      body: LoginForm(
-        usernameController: _usernameController,
-        passwordController: _passwordController,
-        hiddenPassword: _hiddenPassword,
-        loading: _loading,
-        errorMessage: _errorMessage,
-        onLoginPressed: () => UserService.login(
-          context,
-          _usernameController,
-          _passwordController,
-          _setLoading,
-          _setErrorMessage,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
+          iconSize: 30,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        onPasswordVisibilityToggled: () {
-          setState(() {
-            _hiddenPassword = !_hiddenPassword;
-          });
-        },
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'assets/logo2.png',
+                cacheHeight: 180,
+                cacheWidth: 180,
+              ),
+              const SizedBox(height: 16.0),
+              const LoginForm(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
+                child: Container(
+                  alignment: AlignmentDirectional.bottomCenter,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text('Bạn chưa có tài khoản? '),
+                      ),
+                      ElevatedButton(
+                        onPressed: null,
+                        style: ButtonStyle(
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.blueAccent)),
+                        child: Text(
+                          'Đăng ký',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

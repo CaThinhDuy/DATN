@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/client/widgets/custom_text_field.dart';
+
+import 'package:flutter_application_1/client/widgets/CustomTextField.dart';
 import 'package:flutter_application_1/client/widgets/error_message.dart';
-import '../screens/forgot_pass_screen.dart';
+import '../screens/ForgotPasswordScreen.dart';
+
 import '../widgets/button_custom.dart';
 import '../screens/register_screen.dart'; // Import RegisterScreen
 // Import NavBar
@@ -15,7 +17,8 @@ class LoginForm extends StatelessWidget {
   final VoidCallback onLoginPressed;
   final VoidCallback onPasswordVisibilityToggled;
 
-  const LoginForm({super.key, 
+  const LoginForm({
+    super.key,
     required this.usernameController,
     required this.passwordController,
     required this.hiddenPassword,
@@ -24,6 +27,23 @@ class LoginForm extends StatelessWidget {
     required this.onLoginPressed,
     required this.onPasswordVisibilityToggled,
   });
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Vui lòng nhập mật khẩu';
+    }
+    // if (value.length < 6) {
+    //   return 'Mật khẩu phải có ít nhất 6 ký tự';
+    // }
+    return null;
+  }
+
+  String? _validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Vui lòng nhập tên đăng nhập';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +78,7 @@ class LoginForm extends StatelessWidget {
                   onPressed: onPasswordVisibilityToggled,
                 ),
                 obscureText: hiddenPassword,
+                validator: _validatePassword,
               ),
             ),
             if (errorMessage != null) ErrorMessage(errorMessage: errorMessage!),
@@ -86,28 +107,12 @@ class LoginForm extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ForgetPasswordScreen()),
+                          builder: (context) => const ForgetPasswordScreen()),
                     );
                   },
                   child: const Text(
                     'quên mật khẩu?',
                     style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-                const SizedBox(width: 5),
-                ElevatedButton(
-                  onPressed: () {
-                    // TODO: Implement Google sign-in logic
-                  },
-                  style: const ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(Colors.blueAccent),
-                  ),
-                  child: const Text(
-                    'Đăng nhập với Google',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
                 ),
               ],

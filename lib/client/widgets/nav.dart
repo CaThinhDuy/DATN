@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/server/user_state.dart';
+
+import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/client/screens/Notification.dart';
+import 'package:flutter_application_1/utils/standard_UI.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/notification_list.dart';
@@ -11,7 +15,8 @@ import 'package:provider/provider.dart';
 class NavBar extends StatefulWidget {
   final String? token;
   final int? id;
-  const NavBar({Key? key, this.token, this.id}) : super(key: key);
+
+  const NavBar({super.key, this.token, this.id});
 
   @override
   _NavBarState createState() => _NavBarState();
@@ -33,13 +38,18 @@ class _NavBarState extends State<NavBar> {
     setState(() {
       _token = widget.token ?? prefs.getString('token');
       _userId = widget.id ?? prefs.getInt('id');
-      context.read<UserState>().setUserId(_userId!);
     });
   }
 
   List<Widget> get _widgetOptions => [
         const HomePage(),
-        const NotificationScreen(),
+        if (_token != null && _userId != null)
+          NotificationScreen(
+            UserID: _userId!,
+            token: _token!,
+          )
+        else
+          const NotificationNoToken(),
         if (_token != null && _userId != null)
           ProfileScreen(
             token: _token!,
@@ -58,7 +68,6 @@ class _NavBarState extends State<NavBar> {
       _token = null;
       _userId = null;
       _selectedIndex = 0;
-      context.read<UserState>().setUserId(-1);
     });
   }
 
@@ -71,32 +80,40 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: UI.backgroundApp,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        backgroundColor: UI.backgroundApp,
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.white),
+            icon: Icon(
+              Icons.home,
+              color: UI.wordTile,
+              size: UI.wordTileSize,
+            ),
             label: 'Trang chủ',
             activeIcon: Icon(Icons.home, color: Colors.white, size: 30),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications, color: Colors.white),
+            icon: Icon(Icons.notifications,
+                color: UI.wordTile, size: UI.wordTileSize),
             label: 'Thông báo',
             activeIcon:
                 Icon(Icons.notifications, color: Colors.white, size: 30),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white),
+            icon: Icon(Icons.person, color: UI.wordTile, size: UI.wordTileSize),
             label: 'Cá nhân',
             activeIcon: Icon(Icons.person, color: Colors.white, size: 30),
           ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        backgroundColor: const Color.fromARGB(255, 255, 92, 52),
+        unselectedIconTheme: const IconThemeData(
+          color: UI.wordTile,
+        ),
         onTap: _onItemTapped,
       ),
     );

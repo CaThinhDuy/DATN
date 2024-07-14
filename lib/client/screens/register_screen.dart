@@ -1,6 +1,8 @@
 // lib/screens/register_screen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/utils/standard_ui.dart';
+
+import 'package:flutter_application_1/utils/standard_UI.dart';
+
 import '../widgets/register_form.dart';
 
 class RegisterScreen extends StatelessWidget {
