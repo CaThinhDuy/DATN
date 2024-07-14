@@ -81,7 +81,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
-
   file_selector_linux:
     dependency: transitive
     description:
@@ -114,7 +113,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+1"
-
   flutter:
     dependency: "direct main"
     description: flutter
@@ -128,7 +126,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
-
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -137,7 +134,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.20"
-
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -292,7 +288,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.0"
-
   mime:
     dependency: transitive
     description:
@@ -301,7 +296,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
-
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
@@ -350,7 +352,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-
   provider:
     dependency: "direct dev"
     description:
@@ -360,11 +361,7 @@ packages:
     source: hosted
     version: "6.1.2"
   shared_preferences:
-    dependency: "direct dev"
-
-  shared_preferences:
     dependency: "direct main"
-
     description:
       name: shared_preferences
       sha256: d3bbe5553a986e83980916ded2f0b435ef2e1893dfaa29d5a7a790d0eca12180
