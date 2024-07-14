@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter_application_1/client/models/user_db.dart';
-import '../../server/user_services.dart';
+import '../../server/UserService.dart';
+import '../../utils/standard_UI.dart';
 import '../widgets/button_custom.dart';
-// Import màn hình hồ sơ
 
 class EditProfileScreen extends StatefulWidget {
   final String token;
@@ -20,6 +23,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController phoneController;
   late TextEditingController emailController;
   late TextEditingController addressController;
+  String? _avatarUrl;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -31,6 +36,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return UserService.getUserProfile(widget.token, widget.id);
   }
 
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _avatarUrl = image.path;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,10 +52,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: const Text(
           'Chỉnh sửa cá nhân',
           style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+              fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white, size: 20),
-        backgroundColor: const Color.fromARGB(255, 255, 92, 52),
+        backgroundColor: UI.backgroundApp,
       ),
       body: FutureBuilder<User?>(
         future: futureProfile,
@@ -58,19 +72,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             emailController = TextEditingController(text: user.email);
             addressController = TextEditingController(text: user.address1);
 
+            _avatarUrl ??= user.avatar;
+
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: ListView(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: Colors.black)),
-                    child: ClipRect(
-                      child: Image.network(
-                        user.avatar ?? user.avatar!,
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        fit: BoxFit.cover,
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: Colors.black)),
+                      child: ClipRect(
+                        child: _avatarUrl != null
+                            ? Image.network(
+                                _avatarUrl!,
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                fit: BoxFit.cover,
+                              )
+                            : const Icon(Icons.person, size: 100),
                       ),
                     ),
                   ),
@@ -78,22 +100,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   TextField(
                     controller: firstNameController,
                     decoration: const InputDecoration(labelText: 'Họ'),
+                    keyboardType: TextInputType.name,
+                    inputFormatters: [LengthLimitingTextInputFormatter(100)],
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: lastNameController,
                     decoration: const InputDecoration(labelText: 'Tên'),
+                    keyboardType: TextInputType.name,
+                    inputFormatters: [LengthLimitingTextInputFormatter(100)],
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: phoneController,
                     decoration:
                         const InputDecoration(labelText: 'Số điện thoại'),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: emailController,
                     decoration: const InputDecoration(labelText: 'Email'),
+                    inputFormatters: [LengthLimitingTextInputFormatter(500)],
                   ),
                   const SizedBox(height: 10),
                   TextField(
@@ -105,7 +137,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     label: 'Lưu',
                     onPressed: () async {
                       Map<String, dynamic> updatedData = {
-                        'avatar': user.avatar,
+                        'avatar': _avatarUrl,
                         'first_name': firstNameController.text,
                         'last_name': lastNameController.text,
                         'phone': phoneController.text,

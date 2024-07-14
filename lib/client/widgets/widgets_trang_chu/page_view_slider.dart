@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class PageViewSlider extends StatefulWidget {
-  const PageViewSlider({Key? key}) : super(key: key);
+  const PageViewSlider({super.key});
 
   @override
   _PageViewSliderState createState() => _PageViewSliderState();

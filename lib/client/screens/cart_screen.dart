@@ -80,7 +80,7 @@ class _CartScreenState extends State<CartScreen> {
                 order.status == 0 &&
                 order.userId == context.read<UserState>().userId)
             .toList();
-        
+
         context.read<UserState>().setOrderId(1);
         _orderDetails = orderDetails
             .map((json) => OrderDetails.fromJson(json))
