@@ -98,11 +98,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   TextField(
                     controller: firstNameController,
                     decoration: const InputDecoration(labelText: 'Họ'),
+                    keyboardType: TextInputType.name,
+                    inputFormatters: [LengthLimitingTextInputFormatter(100)],
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: lastNameController,
                     decoration: const InputDecoration(labelText: 'Tên'),
+                    keyboardType: TextInputType.name,
+                    inputFormatters: [LengthLimitingTextInputFormatter(100)],
                   ),
                   const SizedBox(height: 10),
                   TextField(
@@ -119,11 +123,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   TextField(
                     controller: emailController,
                     decoration: const InputDecoration(labelText: 'Email'),
+                    inputFormatters: [LengthLimitingTextInputFormatter(500)],
                   ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: addressController,
                     decoration: const InputDecoration(labelText: 'Địa chỉ'),
+                    inputFormatters: [LengthLimitingTextInputFormatter(500)],
                   ),
                   const SizedBox(height: 20),
                   ContainerButton(

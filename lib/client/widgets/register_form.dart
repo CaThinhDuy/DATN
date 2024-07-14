@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/widgets/nav.dart';
 import 'package:flutter_application_1/server/UserService.dart';
 import 'CustomTextField.dart';
 import 'error_message.dart';
@@ -38,6 +39,13 @@ class _RegisterFormState extends State<RegisterForm> {
           });
         },
       );
+      if (_errorMessage == null) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => NavBar()),
+          (route) => false, // Xóa tất cả các màn hình khỏi stack
+        );
+      }
     }
   }
 

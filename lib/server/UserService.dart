@@ -112,7 +112,11 @@ class UserService {
         );
       } else if (response.statusCode == 400) {
         // Xử lý lỗi từ phía máy chủ (ví dụ: dữ liệu không hợp lệ)
-        setErrorMessage('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
+        setErrorMessage('Email  đã được sử dụng.\n Vui lòng chọn mail khác.');
+      } else if (response.statusCode == 405) {
+        // Xử lý lỗi từ phía máy chủ (ví dụ: dữ liệu không hợp lệ)
+        setErrorMessage(
+            'Tài khoản  đã được sử dụng.\n Vui lòng chọn tên khác.');
       } else if (response.statusCode == 409) {
         // Xử lý lỗi từ phía máy chủ (ví dụ: tài khoản đã tồn tại)
         setErrorMessage('Tài khoản đã tồn tại. Vui lòng thử lại.');

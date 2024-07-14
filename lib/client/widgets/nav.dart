@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/client/screens/Notification.dart';
+import 'package:flutter_application_1/utils/standard_UI.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/notification_list.dart';
@@ -74,26 +76,36 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: UI.backgroundApp,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: UI.backgroundApp,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+              color: UI.wordTile,
+              size: UI.wordTileSize,
+            ),
             label: 'Trang chủ',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.notifications,
+                color: UI.wordTile, size: UI.wordTileSize),
             label: 'Thông báo',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person, color: UI.wordTile, size: UI.wordTileSize),
             label: 'Cá nhân',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.white,
+        unselectedIconTheme: const IconThemeData(
+          color: UI.wordTile,
+        ),
         onTap: _onItemTapped,
       ),
     );
