@@ -14,10 +14,14 @@ class RowCustom extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        Text(
-          lable!,
-          style: const TextStyle(fontSize: 20),
-          textAlign: TextAlign.left,
+        Expanded(
+          child: Text(
+            lable!,
+            style: const TextStyle(fontSize: 20),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.left,
+          ),
         )
       ],
     );

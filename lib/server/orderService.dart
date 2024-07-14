@@ -63,27 +63,27 @@ class OrderService {
     }
   }
 
-  static Future<Order?> updateOrder(
-      String token, int orderID, Map<String, dynamic> updatedData) async {
+  static Future<Order?> updateOrderStatus(
+      int orderID, Map<String, dynamic> updatedData) async {
+    final uri = Uri.parse('${Api.orderService}/status/$orderID');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = jsonEncode(updatedData);
+
     try {
-      final response = await http.put(
-        Uri.parse('${baseOrderDetailsUrl}/status/$orderID'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(updatedData),
-      );
+      final response = await http.put(uri, headers: headers, body: body);
       print(response.body);
+
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
         return Order.fromJson(data);
       } else {
-        print('Failed to load Order: ${response.statusCode}');
+        print('Failed to update Order: ${response.statusCode}');
         return null;
       }
     } catch (e) {
-      print('Error loading  Order: $e');
+      print('Error updating Order: $e');
       return null;
     }
   }

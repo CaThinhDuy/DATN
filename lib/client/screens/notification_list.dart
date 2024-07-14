@@ -103,7 +103,6 @@ class _NotificationListState extends State<NotificationScreen> {
                                       notification['message'].length > 30
                                   ? '${notification['message']}'
                                   : notification['message'] ?? 'No Message',
-                              maxLines: 10,
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(notification['createdAt'] != null

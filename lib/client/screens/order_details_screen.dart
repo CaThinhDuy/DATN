@@ -10,9 +10,12 @@ import '../models/order_db.dart';
 class OrderDetailsScreen extends StatefulWidget {
   final int order_id;
   final int TotalMoney;
-  const OrderDetailsScreen(
-      {Key? key, required this.order_id, required this.TotalMoney})
-      : super(key: key);
+
+  const OrderDetailsScreen({
+    Key? key,
+    required this.order_id,
+    required this.TotalMoney,
+  }) : super(key: key);
 
   @override
   State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
@@ -22,25 +25,38 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   List<Map<String, dynamic>> orders = [];
   bool isLoading = true;
   late OrderService orderService;
+  late int status; // Biến lưu trữ trạng thái đơn hàng
 
   @override
   void initState() {
     super.initState();
     orderService = OrderService();
-    fetchOrders();
+    fetchOrders(); // Gọi hàm để tải chi tiết đơn hàng khi màn hình được khởi tạo
   }
 
+  // Hàm để tải chi tiết đơn hàng từ API
   Future<void> fetchOrders() async {
     try {
       final fetchedOrders =
           await orderService.fetchOrdersDetails(widget.order_id);
-      setState(() {
-        orders = mergeOrders(fetchedOrders);
-        isLoading = false;
-      });
+
+      // Nếu có dữ liệu đơn hàng trả về từ API
+      if (fetchedOrders.isNotEmpty) {
+        setState(() {
+          orders =
+              mergeOrders(fetchedOrders); // Gộp các đơn hàng có cùng số đơn
+          status =
+              orders.first['status']; // Lưu trạng thái của đơn hàng đầu tiên
+          isLoading = false; // Đã tải dữ liệu xong
+        });
+      } else {
+        setState(() {
+          isLoading = false; // Không có đơn hàng nào
+        });
+      }
     } catch (e) {
       setState(() {
-        isLoading = false;
+        isLoading = false; // Lỗi khi tải dữ liệu đơn hàng
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Không thể tải dữ liệu đơn hàng: $e')),
@@ -48,6 +64,31 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     }
   }
 
+  // Hàm để cập nhật trạng thái đơn hàng
+  Future<void> statusOrders(
+      int orderID, Map<String, dynamic> updatedData) async {
+    try {
+      final statusOrder =
+          await OrderService.updateOrderStatus(orderID, updatedData);
+
+      // Hiển thị thông báo thành công hoặc thất bại khi cập nhật trạng thái
+      if (statusOrder != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Cập nhật trạng thái đơn hàng thành công')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Không thể cập nhật trạng thái đơn hàng')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Không thể tải dữ liệu đơn hàng: $e')),
+      );
+    }
+  }
+
+  // Hàm gộp các đơn hàng có cùng số đơn
   List<Map<String, dynamic>> mergeOrders(List<Map<String, dynamic>> orders) {
     Map<String, Map<String, dynamic>> mergedOrders = {};
 
@@ -62,7 +103,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           'products_image': [],
         };
       }
-      // Check if the product is already in products list of mergedOrders
+      // Kiểm tra xem sản phẩm đã tồn tại trong danh sách sản phẩm của mergedOrders chưa
       bool productExists = mergedOrders[orderNumber]!['products']
           .any((product) => product['product_id'] == order['product_id']);
       bool userExists = mergedOrders[orderNumber]!['users']
@@ -70,15 +111,18 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       bool imageExists = mergedOrders[orderNumber]!['products_image']
           .any((image) => image['image1'] == order['image1']);
 
+      // Nếu sản phẩm chưa tồn tại, thêm vào danh sách sản phẩm của mergedOrders
       if (!productExists) {
         mergedOrders[orderNumber]!['products'].add({
           'name': order['product_name'],
           'product_id': order['product_id'],
-          'unit_price': order['unit_price'],
+          'unit_price': order['unit_price'] =
+              int.parse(order['total_amount'].split('.')[0]),
           'quantity': order['quantity'],
         });
       }
 
+      // Nếu người dùng chưa tồn tại, thêm vào danh sách người dùng của mergedOrders
       if (!userExists) {
         mergedOrders[orderNumber]!['users'].add({
           'last_name': order['last_name'],
@@ -87,6 +131,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         });
       }
 
+      // Nếu hình ảnh sản phẩm chưa tồn tại, thêm vào danh sách hình ảnh của mergedOrders
       if (!imageExists) {
         mergedOrders[orderNumber]!['products_image'].add({
           'image1': order['image1'],
@@ -94,7 +139,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       }
     }
     print(mergedOrders.values.toList());
-    return mergedOrders.values.toList();
+    return mergedOrders.values.toList(); // Trả về danh sách đơn hàng đã gộp
   }
 
   @override
@@ -127,7 +172,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           final order = orders[index];
                           return Container(
                             constraints: const BoxConstraints(
-                              minHeight: 650, // Đặt chiều cao tối thiểu
+                              minHeight:
+                                  650, // Đặt chiều cao tối thiểu cho Container
                             ),
                             child: Card(
                               color: Colors.white,
@@ -246,12 +292,32 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         },
                       ),
           ),
-          // ContainerButton(label: 'HỦY', onPressed: onPressed)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ContainerButton(
+              label: 'HỦY',
+              onPressed: () {
+                if (status == 1) {
+                  // Kiểm tra nếu đơn hàng có trạng thái là 1 (Chưa xử lý)
+                  statusOrders(widget.order_id,
+                      {'status': 4}); // Cập nhật trạng thái hủy đơn hàng
+                  fetchOrders();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content:
+                            Text('Trạng thái đơn hàng không phù hợp để hủy')),
+                  );
+                }
+              },
+            ),
+          ),
         ],
       ),
     );
   }
 
+  // Hàm trả về chuỗi mô tả trạng thái dựa vào số
   String getStatusText(int status) {
     switch (status) {
       case 1:
