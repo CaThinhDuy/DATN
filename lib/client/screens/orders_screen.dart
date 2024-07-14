@@ -2,52 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/server/orderService.dart';
 import 'package:flutter_application_1/utils/standard_UI.dart';
 
+import '../widgets/product_list.dart';
 import 'order_details_screen.dart';
 
 class OrderScreen extends StatefulWidget {
   final int user_id;
-  const OrderScreen({super.key, required this.user_id});
+  const OrderScreen(
+      {super.key, required this.user_id}); // Constructor của Widget
 
   @override
-  State<OrderScreen> createState() => _OrderScreenState();
+  State<OrderScreen> createState() =>
+      _OrderScreenState(); // Tạo state cho Widget
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  List<Map<String, dynamic>> orders = [];
-  List<Map<String, dynamic>> filteredOrders = [];
-  bool isLoading = true;
-  int selectedStatus = -1; // -1 indicates no filter
-  late OrderService orderService;
+  List<Map<String, dynamic>> orders = []; // Danh sách đơn hàng ban đầu
+  List<Map<String, dynamic>> filteredOrders = []; // Danh sách đơn hàng được lọc
+  bool isLoading = true; // Biến xác định trạng thái tải dữ liệu
+  int selectedStatus =
+      -1; // Trạng thái đơn hàng được chọn, -1 là không có bộ lọc
+  late OrderService orderService; // Dịch vụ xử lý đơn hàng
 
   @override
   void initState() {
     super.initState();
-    orderService = OrderService();
-    fetchOrders();
+    orderService = OrderService(); // Khởi tạo dịch vụ đơn hàng
+    fetchOrders(); // Gọi hàm để tải danh sách đơn hàng
   }
 
+  // Hàm tải danh sách đơn hàng từ server
   Future<void> fetchOrders() async {
     try {
-      final fetchedOrders = await orderService.fetchOrders(widget.user_id);
+      final fetchedOrders = await orderService
+          .fetchOrders(widget.user_id); // Gọi API để lấy danh sách đơn hàng
       setState(() {
-        orders = mergeOrders(fetchedOrders);
-        filteredOrders = orders; // Initialize with all orders
+        orders =
+            mergeOrders(fetchedOrders); // Gộp các đơn hàng vào danh sách orders
+        filteredOrders =
+            orders; // Khởi tạo filteredOrders ban đầu là toàn bộ danh sách
         for (var order in orders) {
-          order['total_amount'] =
-              int.parse(order['total_amount'].split('.')[0]);
+          order['total_amount'] = int.parse(order['total_amount']
+              .split('.')[0]); // Xử lý số tiền thành kiểu int
         }
-        isLoading = false;
+        isLoading = false; // Đã tải xong, isLoading = false
       });
     } catch (e) {
       setState(() {
-        isLoading = false;
+        isLoading = false; // Xử lý lỗi khi không tải được danh sách đơn hàng
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Không thể tải dữ liệu đơn hàng: $e')),
+        SnackBar(
+            content: Text(
+                'Không thể tải dữ liệu đơn hàng: $e')), // Hiển thị thông báo lỗi
       );
     }
   }
 
+  // Hàm gộp các đơn hàng có cùng mã vào một đơn hàng duy nhất
   List<Map<String, dynamic>> mergeOrders(List<Map<String, dynamic>> orders) {
     Map<String, Map<String, dynamic>> mergedOrders = {};
 
@@ -69,17 +80,20 @@ class _OrderScreenState extends State<OrderScreen> {
       });
     }
 
-    return mergedOrders.values.toList();
+    return mergedOrders.values
+        .toList(); // Trả về danh sách đơn hàng đã được gộp
   }
 
+  // Hàm lọc các đơn hàng theo trạng thái
   void filterOrders(int status) {
     setState(() {
-      selectedStatus = status;
+      selectedStatus = status; // Đặt trạng thái đã chọn
       if (status == -1) {
-        filteredOrders = orders;
+        filteredOrders = orders; // Hiển thị tất cả đơn hàng nếu không có bộ lọc
       } else {
-        filteredOrders =
-            orders.where((order) => order['status'] == status).toList();
+        filteredOrders = orders
+            .where((order) => order['status'] == status)
+            .toList(); // Lọc các đơn hàng theo trạng thái
       }
     });
   }
@@ -106,17 +120,21 @@ class _OrderScreenState extends State<OrderScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
+                // Các nút lọc đơn hàng
                 ElevatedButton(
                   onPressed: () => filterOrders(-1),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        selectedStatus == -1 ? Colors.blue : Colors.grey,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    backgroundColor: selectedStatus == -1
+                        ? Colors.blue
+                        : Colors.grey, // Màu nền của nút
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16), // Khoảng cách nút
                   ),
                   child: const Text('Tất cả',
-                      style: TextStyle(color: Colors.white)),
+                      style: TextStyle(color: Colors.white)), // Nhãn nút
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 8), // Khoảng cách giữa các nút
+                // Các nút lọc khác tương tự
                 ElevatedButton(
                   onPressed: () => filterOrders(1),
                   style: ElevatedButton.styleFrom(
@@ -164,11 +182,36 @@ class _OrderScreenState extends State<OrderScreen> {
             ),
           ),
           Expanded(
-            // Added Expanded widget here
             child: isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(
+                    child:
+                        CircularProgressIndicator()) // Hiển thị tiêu đề tải nếu isLoading là true
                 : filteredOrders.isEmpty
-                    ? const Center(child: Text('Không có đơn hàng nào'))
+                    ? const Center(
+                        child: Column(
+                        children: [
+                          SizedBox(
+                              height: 100,
+                              child: Text('Không có đơn hàng nào')),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Gợi ý sản phẩm",
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: ProductList(),
+                          ),
+                        ],
+                      )) // Hiển thị thông báo nếu không có đơn hàng
                     : ListView.builder(
                         itemCount: filteredOrders.length,
                         itemBuilder: (context, index) {
@@ -183,7 +226,9 @@ class _OrderScreenState extends State<OrderScreen> {
                                     TotalMoney: order["total_amount"],
                                   ),
                                 ),
-                              );
+                              ).then((value) {
+                                fetchOrders(); // Gọi lại hàm fetchOrders để làm mới danh sách đơn hàng sau khi quay lại từ màn hình chi tiết đơn hàng
+                              });
                             },
                             child: Card(
                               color: Colors.white,
@@ -223,6 +268,7 @@ class _OrderScreenState extends State<OrderScreen> {
                                       ),
                                     ),
                                   ),
+                                  // Danh sách sản phẩm trong đơn hàng
                                   ListView.builder(
                                     shrinkWrap: true,
                                     physics:
@@ -278,6 +324,7 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 
+  // Hàm trả về văn bản trạng thái dựa trên mã trạng thái
   String getStatusText(int status) {
     switch (status) {
       case 1:
