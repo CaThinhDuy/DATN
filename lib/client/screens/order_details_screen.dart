@@ -116,8 +116,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         mergedOrders[orderNumber]!['products'].add({
           'name': order['product_name'],
           'product_id': order['product_id'],
-          'unit_price': order['unit_price'] =
-              int.parse(order['total_amount'].split('.')[0]),
+          'unit_price': order['unit_price'],
           'quantity': order['quantity'],
         });
       }

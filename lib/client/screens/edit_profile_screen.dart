@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_application_1/client/models/user_db.dart';
@@ -70,6 +71,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             phoneController = TextEditingController(text: user.phone);
             emailController = TextEditingController(text: user.email);
             addressController = TextEditingController(text: user.address1);
+
             _avatarUrl ??= user.avatar;
 
             return Padding(
@@ -129,7 +131,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   TextField(
                     controller: addressController,
                     decoration: const InputDecoration(labelText: 'Địa chỉ'),
-                    inputFormatters: [LengthLimitingTextInputFormatter(500)],
                   ),
                   const SizedBox(height: 20),
                   ContainerButton(

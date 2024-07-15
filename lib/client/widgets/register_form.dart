@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/widgets/nav.dart';
 import 'package:flutter_application_1/server/UserService.dart';
 import 'CustomTextField.dart';
+
 import 'error_message.dart';
 import 'button_custom.dart';
 
@@ -14,6 +15,7 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();

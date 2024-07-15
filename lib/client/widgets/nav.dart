@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/client/screens/Notification.dart';
 import 'package:flutter_application_1/utils/standard_UI.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../server/user_state.dart';
 import '../screens/notification_list.dart';
 import '../screens/profile.dart';
 import '../screens/login_screen.dart';
 import '../screens/trang_chu.dart';
+import 'package:provider/provider.dart';
 
 class NavBar extends StatefulWidget {
   final String? token;
   final int? id;
-  const NavBar({super.key, this.token, this.id});
+
+  const NavBar({Key? key, this.token, this.id}) : super(key: key);
 
   @override
   _NavBarState createState() => _NavBarState();
@@ -34,6 +39,8 @@ class _NavBarState extends State<NavBar> {
     setState(() {
       _token = widget.token ?? prefs.getString('token');
       _userId = widget.id ?? prefs.getInt('id');
+
+      context.read<UserState>().setUserId(_userId!);
     });
   }
 
@@ -64,6 +71,8 @@ class _NavBarState extends State<NavBar> {
       _token = null;
       _userId = null;
       _selectedIndex = 0;
+
+      context.read<UserState>().setUserId(-1);
     });
   }
 
@@ -90,15 +99,19 @@ class _NavBarState extends State<NavBar> {
               size: UI.wordTileSize,
             ),
             label: 'Trang chủ',
+            activeIcon: Icon(Icons.home, color: Colors.white, size: 30),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications,
                 color: UI.wordTile, size: UI.wordTileSize),
             label: 'Thông báo',
+            activeIcon:
+                Icon(Icons.notifications, color: Colors.white, size: 30),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person, color: UI.wordTile, size: UI.wordTileSize),
             label: 'Cá nhân',
+            activeIcon: Icon(Icons.person, color: Colors.white, size: 30),
           ),
         ],
         currentIndex: _selectedIndex,

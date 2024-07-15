@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'client/widgets/nav.dart';
 
+import 'server/user_state.dart';
+import 'package:provider/provider.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => UserState(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
