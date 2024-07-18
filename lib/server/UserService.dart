@@ -17,6 +17,7 @@ class UserService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('authToken', token);
     await prefs.setInt('id', id);
+    print('token : ${prefs.get('authToken')} and id ${prefs.get('id')}');
   }
 
   static Future<void> login(
@@ -49,7 +50,7 @@ class UserService {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
       final String token = responseBody['token'];
       final int id = responseBody['id'];
-      print(response.body);
+      print('token and id ${response.body}');
       // Save token into SharedPreferences
       await saveTokenID(token, id);
 
@@ -231,5 +232,43 @@ class UserService {
       print('Error loading notification: $e');
       return null;
     }
+  }
+
+  static Future<Notifications?> updateNotificationStatus(
+      int notificationId, Map<String, dynamic> updatedData) async {
+    final uri =
+        Uri.parse('${Api.notificationService}/notifications/$notificationId');
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = jsonEncode(updatedData);
+
+    try {
+      final response = await http.put(uri, headers: headers, body: body);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        return Notifications.fromJson(data);
+      } else {
+        print('Failed to update Order: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error updating Order: $e');
+      return null;
+    }
+  }
+
+  static Future<bool> deleteNotification(
+      String token, int notificationId) async {
+    print('${Api.notificationService}/id=$notificationId');
+    final response = await http.delete(
+      Uri.parse('${Api.notificationService}/id=$notificationId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    return response.statusCode == 200 ? true : false;
   }
 }

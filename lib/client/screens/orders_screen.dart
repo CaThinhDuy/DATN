@@ -39,6 +39,14 @@ class _OrderScreenState extends State<OrderScreen> {
     _loadProductData(); // Gọi hàm để tải danh sách sản phẩm
   }
 
+  String formatCurrency(double value) {
+    return value.toStringAsFixed(0).replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+              (Match m) => '${m[1]},',
+            ) +
+        ' đ';
+  }
+
   Future<void> _loadProductData() async {
     try {
       final apiService = APIServices();
@@ -67,7 +75,7 @@ class _OrderScreenState extends State<OrderScreen> {
         filteredOrders =
             orders; // Khởi tạo filteredOrders ban đầu là toàn bộ danh sách
         for (var order in orders) {
-          order['total_amount'] = int.parse(order['total_amount']
+          order['total_amount'] = double.parse(order['total_amount']
               .split('.')[0]); // Xử lý số tiền thành kiểu int
         }
         isLoading = false; // Đã tải xong, isLoading = false
@@ -328,7 +336,8 @@ class _OrderScreenState extends State<OrderScreen> {
                                             style: TextStyle(fontSize: 20),
                                           ),
                                           Text(
-                                            '${order["total_amount"]}',
+                                            formatCurrency(
+                                                order["total_amount"]),
                                             style: const TextStyle(
                                               color: Colors.redAccent,
                                               fontSize: 25,
@@ -364,7 +373,7 @@ class _OrderScreenState extends State<OrderScreen> {
       case 4:
         return 'Đã hủy';
       default:
-        return 'Chưa đặt hàng';
+        return 'Chưa xác định';
     }
   }
 }

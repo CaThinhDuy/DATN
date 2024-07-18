@@ -37,7 +37,7 @@ class _NavBarState extends State<NavBar> {
   Future<void> _loadToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _token = widget.token ?? prefs.getString('token');
+      _token = widget.token ?? prefs.getString('authToken');
       _userId = widget.id ?? prefs.getInt('id');
 
       context.read<UserState>().setUserId(_userId!);

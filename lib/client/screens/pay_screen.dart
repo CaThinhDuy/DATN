@@ -1,8 +1,11 @@
 // import 'dart:js_interop';
 
+// import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/client/screens/trang_chu.dart';
 import 'package:flutter_application_1/client/widgets/nav.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_application_1/client/models/order_detail.dart';
 
 import '../../server/api_services.dart';
@@ -24,11 +27,24 @@ class _PayScreenState extends State<PayScreen> {
   List<Order> _orders = [];
   List<Order> _filteredOrders = [];
   List<OrderDetails> _orderDetails = [];
+  late String _token;
+  late int _userId;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    _loadToken();
+  }
+
+  Future<void> _loadToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _token = prefs.getString('authToken')!;
+      _userId = prefs.getInt('id')!;
+
+      context.read<UserState>().setUserId(_userId!);
+    });
   }
 
   Future<void> _datHang() async {
@@ -52,9 +68,14 @@ class _PayScreenState extends State<PayScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const NavBar()),
+                  MaterialPageRoute(
+                      builder: (context) => NavBar(
+                            id: _userId,
+                            token: _token,
+                          )),
+                  (Route<dynamic> route) => false,
                 );
               },
               child: Text('OK'),

@@ -9,7 +9,7 @@ import '../models/order_db.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final int order_id;
-  final int TotalMoney;
+  final double TotalMoney;
 
   const OrderDetailsScreen({
     Key? key,
@@ -32,6 +32,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     super.initState();
     orderService = OrderService();
     fetchOrders(); // Gọi hàm để tải chi tiết đơn hàng khi màn hình được khởi tạo
+  }
+
+  String formatCurrency(double value) {
+    return value.toStringAsFixed(0).replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+              (Match m) => '${m[1]},',
+            ) +
+        ' đ';
   }
 
   // Hàm để tải chi tiết đơn hàng từ API
@@ -116,7 +124,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         mergedOrders[orderNumber]!['products'].add({
           'name': order['product_name'],
           'product_id': order['product_id'],
-          'unit_price': order['unit_price'],
+          'unit_price': double.parse(order['unit_price']
+              .toString()), // Chuyển đổi unit_price sang double
           'quantity': order['quantity'],
         });
       }
@@ -137,6 +146,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         });
       }
     }
+
     print(mergedOrders.values.toList());
     return mergedOrders.values.toList(); // Trả về danh sách đơn hàng đã gộp
   }
@@ -254,7 +264,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                           'Số lượng: ${product["quantity"]}',
                                           textAlign: TextAlign.end,
                                         ),
-                                        trailing: Text(product["unit_price"]),
+                                        trailing: Text(formatCurrency(
+                                                product["unit_price"])
+                                            .toString()),
                                       );
                                     },
                                   ),
@@ -272,7 +284,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                             style: TextStyle(fontSize: 20),
                                           ),
                                           Text(
-                                            '${widget.TotalMoney}',
+                                            formatCurrency(widget.TotalMoney),
                                             style: const TextStyle(
                                               color: Colors.redAccent,
                                               fontSize: 25,
